@@ -4,10 +4,10 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import io.quarkus.logging.Log;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import org.tiagop.lagit.audio.track.TrackManager;
+import org.tiagop.lagit.util.Format;
 
 @RequiredArgsConstructor
 public class TrackLoadHandler implements AudioLoadResultHandler {
@@ -17,15 +17,13 @@ public class TrackLoadHandler implements AudioLoadResultHandler {
     private final Runnable onSuccessCallback;
 
     private void loadTrack(final AudioTrack track) {
-        Log.infof("Loaded track %s", track.getInfo().title);
         trackManager.queue(track);
     }
 
     @Override
     public void trackLoaded(final AudioTrack track) {
         loadTrack(track);
-        final var trackInfo = track.getInfo();
-        interactionHook.sendMessage("Added '%s' to queue".formatted(trackInfo.title))
+        interactionHook.sendMessage("Added '%s' to queue".formatted(Format.trackInfoString(track)))
                 .queue();
         onSuccessCallback.run();
     }
@@ -39,9 +37,8 @@ public class TrackLoadHandler implements AudioLoadResultHandler {
         for (AudioTrack track : playlist.getTracks()) {
             loadTrack(track);
         }
-        final var firstTrackInfo = playlist.getTracks().getFirst().getInfo();
         interactionHook.sendMessage("Added '%s' to queue and %d others".formatted(
-                        firstTrackInfo.title,
+                        Format.trackInfoString(playlist.getTracks().getFirst()),
                         playlist.getTracks().size()))
                 .queue();
         onSuccessCallback.run();
