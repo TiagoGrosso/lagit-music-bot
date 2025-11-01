@@ -5,8 +5,10 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 import org.tiagop.lagit.audio.manager.AudioService;
-import org.tiagop.lagit.command.PauseCommand;
 import org.tiagop.lagit.command.option.QueueCommand;
+import org.tiagop.lagit.util.Format;
+
+import java.util.stream.Collectors;
 
 @Dependent
 public class QueueCommandListener extends AbstractGuildCommandListener<QueueCommand.Data, QueueCommand> {
@@ -28,6 +30,14 @@ public class QueueCommandListener extends AbstractGuildCommandListener<QueueComm
             @NotNull final Guild guild
     ) {
         final var queue = audioService.getQueue(guild);
-        event.reply("Current queue:\n" + queue.toString()).queue();
+        if (queue.isEmpty()) {
+            event.reply("Queue is empty").queue();
+            return;
+        }
+        final var queueInfo = queue.stream()
+                .map(Format::trackInfoString)
+                .map("1. %s"::formatted)
+                .collect(Collectors.joining("\n"));
+        event.reply(queueInfo).queue();
     }
 }
