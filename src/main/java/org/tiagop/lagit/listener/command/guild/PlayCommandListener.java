@@ -1,5 +1,8 @@
 package org.tiagop.lagit.listener.command.guild;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import jakarta.enterprise.context.Dependent;
 import java.util.Optional;
 import net.dv8tion.jda.api.entities.Guild;
@@ -10,23 +13,26 @@ import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.tiagop.lagit.audio.manager.AudioService;
 import org.tiagop.lagit.audio.manager.ChannelService;
-import org.tiagop.lagit.audio.manager.TrackLoadHandler;
 import org.tiagop.lagit.command.PlayCommand;
+import org.tiagop.lagit.util.Format;
 
 @Dependent
 public class PlayCommandListener extends AbstractGuildCommandListener<PlayCommand.Data, PlayCommand> {
 
     private final AudioService audioService;
     private final ChannelService channelService;
+    private final AudioPlayerManager audioPlayerManager;
 
     public PlayCommandListener(
         final PlayCommand command,
         final AudioService audioService,
-        final ChannelService channelService
+        final ChannelService channelService,
+        final AudioPlayerManager audioPlayerManager
     ) {
         super(command);
         this.audioService = audioService;
         this.channelService = channelService;
+        this.audioPlayerManager = audioPlayerManager;
     }
 
     @Override
@@ -75,15 +81,38 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
         String query
     ) {
         event.deferReply().queue();
-        audioService.load(
-            guild,
-            query,
-            trackManager -> new TrackLoadHandler(
-                trackManager,
-                event.getHook(),
-                () -> {
+        final var loaded = audioPlayerManager.loadItemSync(query);
+        switch (loaded) {
+            case AudioTrack track -> {
+                audioService.queue(guild, track);
+                channelService.joinChannel(channel);
+                event.getHook()
+                    .sendMessage("Added '%s' to queue".formatted(Format.trackInfoString(track)))
+                    .queue();
+            }
+            case AudioPlaylist playlist -> {
+                if (playlist.isSearchResult()) {
+                    final var track = playlist.getTracks().getFirst();
+                    audioService.queue(guild, track);
                     channelService.joinChannel(channel);
-                })
-        );
+                    event.getHook()
+                        .sendMessage("Added '%s' to queue".formatted(Format.trackInfoString(track)))
+                        .queue();
+                    return;
+                }
+                final var tracks = playlist.getTracks();
+                for (final var track : tracks) {
+                    audioService.queue(guild, track);
+                }
+                channelService.joinChannel(channel);
+                event.getHook()
+                    .sendMessage("Added '%s' to queue and %d others".formatted(
+                        Format.trackInfoString(tracks.getFirst()),
+                        tracks.size()))
+                    .queue();
+            }
+            case null, default -> event.getHook().sendMessage("No matches found").queue();
+        }
+
     }
 }
