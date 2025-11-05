@@ -2,6 +2,9 @@ package org.tiagop.lagit.audio.manager.guild;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import jakarta.enterprise.context.ApplicationScoped;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
@@ -9,14 +12,11 @@ import org.jetbrains.annotations.NotNull;
 import org.tiagop.lagit.audio.AudioPlayerSendHandler;
 import org.tiagop.lagit.audio.track.TrackManager;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
-
 @ApplicationScoped
 public class GuildService {
 
     private final Map<String, GuildContext> guildContexts;
+
     private final AudioPlayerManager playerManager;
 
     public GuildService(@NotNull final AudioPlayerManager playerManager) {
@@ -35,10 +35,10 @@ public class GuildService {
             };
             final var audioPlayer = playerManager.createPlayer();
             return new GuildContext(
-                    guild.getAudioManager(),
-                    audioPlayer,
-                    new TrackManager(audioPlayer, textChannelSupplier),
-                    new AudioPlayerSendHandler(audioPlayer)
+                guild.getAudioManager(),
+                audioPlayer,
+                new TrackManager(audioPlayer, textChannelSupplier),
+                new AudioPlayerSendHandler(audioPlayer)
             );
         });
     }

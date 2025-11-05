@@ -3,10 +3,9 @@ package org.tiagop.lagit.service.search;
 import io.quarkus.arc.All;
 import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Comparator;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 @ApplicationScoped
 public class SearchService {
@@ -20,9 +19,9 @@ public class SearchService {
     @CacheResult(cacheName = "search")
     public List<SearchResult> search(final String query) {
         return searchClients.stream()
-                .map(c -> c.search(query))
-                .flatMap(List::stream)
-                .sorted(Comparator.comparing(SearchResult::type).thenComparing(SearchResult::name))
-                .toList();
+            .map(c -> c.search(query))
+            .flatMap(List::stream)
+            .sorted(Comparator.comparing(SearchResult::type).thenComparing(SearchResult::name))
+            .toList();
     }
 }

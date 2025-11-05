@@ -1,9 +1,8 @@
 package org.tiagop.lagit.audio.track;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public interface TrackQueue {
 

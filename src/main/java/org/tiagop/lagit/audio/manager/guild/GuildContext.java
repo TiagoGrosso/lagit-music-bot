@@ -7,9 +7,9 @@ import org.tiagop.lagit.audio.AudioPlayerSendHandler;
 import org.tiagop.lagit.audio.track.TrackManager;
 
 public record GuildContext(
-        @NotNull AudioManager audioManager,
-        @NotNull AudioPlayer audioPlayer,
-        @NotNull TrackManager trackManager,
-        @NotNull AudioPlayerSendHandler audioPlayerSendHandler
+    @NotNull AudioManager audioManager,
+    @NotNull AudioPlayer audioPlayer,
+    @NotNull TrackManager trackManager,
+    @NotNull AudioPlayerSendHandler audioPlayerSendHandler
 ) {
 }

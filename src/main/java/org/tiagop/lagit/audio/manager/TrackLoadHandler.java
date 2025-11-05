@@ -24,7 +24,7 @@ public class TrackLoadHandler implements AudioLoadResultHandler {
     public void trackLoaded(final AudioTrack track) {
         loadTrack(track);
         interactionHook.sendMessage("Added '%s' to queue".formatted(Format.trackInfoString(track)))
-                .queue();
+            .queue();
         onSuccessCallback.run();
     }
 
@@ -38,9 +38,9 @@ public class TrackLoadHandler implements AudioLoadResultHandler {
             loadTrack(track);
         }
         interactionHook.sendMessage("Added '%s' to queue and %d others".formatted(
-                        Format.trackInfoString(playlist.getTracks().getFirst()),
-                        playlist.getTracks().size()))
-                .queue();
+                Format.trackInfoString(playlist.getTracks().getFirst()),
+                playlist.getTracks().size()))
+            .queue();
         onSuccessCallback.run();
     }
 

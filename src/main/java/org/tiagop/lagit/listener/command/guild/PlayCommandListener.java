@@ -1,6 +1,7 @@
 package org.tiagop.lagit.listener.command.guild;
 
 import jakarta.enterprise.context.Dependent;
+import java.util.Optional;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
@@ -13,8 +14,6 @@ import org.tiagop.lagit.audio.manager.ChannelService;
 import org.tiagop.lagit.audio.manager.TrackLoadHandler;
 import org.tiagop.lagit.command.PlayCommand;
 
-import java.util.Optional;
-
 @Dependent
 public class PlayCommandListener extends AbstractGuildCommandListener<PlayCommand.Data, PlayCommand> {
 
@@ -22,9 +21,9 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
     private final ChannelService channelService;
 
     public PlayCommandListener(
-            @NotNull final PlayCommand command,
-            @NotNull final AudioService audioService,
-            @NotNull final ChannelService channelService
+        @NotNull final PlayCommand command,
+        @NotNull final AudioService audioService,
+        @NotNull final ChannelService channelService
     ) {
         super(command);
         this.audioService = audioService;
@@ -33,37 +32,37 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
 
     @Override
     protected void handleCommand(
-            @NotNull final SlashCommandInteractionEvent event,
-            @NotNull final PlayCommand.Data data,
-            @NotNull final Guild guild
+        @NotNull final SlashCommandInteractionEvent event,
+        @NotNull final PlayCommand.Data data,
+        @NotNull final Guild guild
     ) {
         final var maybeChannel = Optional.ofNullable(event.getMember())
-                .map(Member::getVoiceState)
-                .map(GuildVoiceState::getChannel)
-                .map(AudioChannelUnion::asVoiceChannel);
+            .map(Member::getVoiceState)
+            .map(GuildVoiceState::getChannel)
+            .map(AudioChannelUnion::asVoiceChannel);
 
         maybeChannel.ifPresentOrElse(
-                channel -> handleCommand(guild, channel, event, data),
-                () -> event.reply("You must be in a voice channel to use this command").queue()
+            channel -> handleCommand(guild, channel, event, data),
+            () -> event.reply("You must be in a voice channel to use this command").queue()
         );
     }
 
     private void handleCommand(
-            @NotNull final Guild guild,
-            @NotNull final VoiceChannel channel,
-            @NotNull final SlashCommandInteractionEvent event,
-            @NotNull PlayCommand.Data data
+        @NotNull final Guild guild,
+        @NotNull final VoiceChannel channel,
+        @NotNull final SlashCommandInteractionEvent event,
+        @NotNull PlayCommand.Data data
     ) {
         data.query().ifPresentOrElse(
-                (query) -> loadTrackAndJoinChannel(guild, channel, event, query),
-                () -> startPlaying(guild, channel, event)
+            (query) -> loadTrackAndJoinChannel(guild, channel, event, query),
+            () -> startPlaying(guild, channel, event)
         );
     }
 
     private void startPlaying(
-            @NotNull final Guild guild,
-            @NotNull final VoiceChannel channel,
-            @NotNull final SlashCommandInteractionEvent event
+        @NotNull final Guild guild,
+        @NotNull final VoiceChannel channel,
+        @NotNull final SlashCommandInteractionEvent event
     ) {
         audioService.play(guild);
         channelService.joinChannel(channel);
@@ -71,21 +70,21 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
     }
 
     private void loadTrackAndJoinChannel(
-            @NotNull final Guild guild,
-            @NotNull final VoiceChannel channel,
-            @NotNull final SlashCommandInteractionEvent event,
-            @NotNull String query
+        @NotNull final Guild guild,
+        @NotNull final VoiceChannel channel,
+        @NotNull final SlashCommandInteractionEvent event,
+        @NotNull String query
     ) {
         event.deferReply().queue();
         audioService.load(
-                guild,
-                query,
-                trackManager -> new TrackLoadHandler(
-                        trackManager,
-                        event.getHook(),
-                        () -> {
-                            channelService.joinChannel(channel);
-                        })
+            guild,
+            query,
+            trackManager -> new TrackLoadHandler(
+                trackManager,
+                event.getHook(),
+                () -> {
+                    channelService.joinChannel(channel);
+                })
         );
     }
 }

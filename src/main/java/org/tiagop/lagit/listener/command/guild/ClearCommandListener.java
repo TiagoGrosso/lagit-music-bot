@@ -13,8 +13,8 @@ public class ClearCommandListener extends AbstractGuildCommandListener<ClearComm
     private final AudioService audioService;
 
     public ClearCommandListener(
-            @NotNull final ClearCommand command,
-            @NotNull final AudioService audioService
+        @NotNull final ClearCommand command,
+        @NotNull final AudioService audioService
     ) {
         super(command);
         this.audioService = audioService;
@@ -22,9 +22,9 @@ public class ClearCommandListener extends AbstractGuildCommandListener<ClearComm
 
     @Override
     protected void handleCommand(
-            @NotNull final SlashCommandInteractionEvent event,
-            @NotNull final ClearCommand.Data data,
-            @NotNull final Guild guild
+        @NotNull final SlashCommandInteractionEvent event,
+        @NotNull final ClearCommand.Data data,
+        @NotNull final Guild guild
     ) {
         audioService.clearQueue(guild);
         event.reply("Queue cleared").queue();

@@ -1,11 +1,10 @@
 package org.tiagop.lagit.audio.track;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import org.jetbrains.annotations.NotNull;
 
 public class InMemoryTrackQueue implements TrackQueue {
 

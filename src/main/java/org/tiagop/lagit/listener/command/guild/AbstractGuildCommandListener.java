@@ -8,7 +8,8 @@ import org.tiagop.lagit.command.AbstractCommand;
 import org.tiagop.lagit.listener.command.AbstractCommandListener;
 
 @Getter
-public abstract class AbstractGuildCommandListener<D, C extends AbstractCommand<D>> extends AbstractCommandListener<D, C> {
+public abstract class AbstractGuildCommandListener<D, C extends AbstractCommand<D>>
+    extends AbstractCommandListener<D, C> {
 
     protected AbstractGuildCommandListener(final C command) {
         super(command);
@@ -24,8 +25,8 @@ public abstract class AbstractGuildCommandListener<D, C extends AbstractCommand<
     }
 
     protected abstract void handleCommand(
-            @NotNull final SlashCommandInteractionEvent event,
-            @NotNull final D data,
-            @NotNull final Guild guild
+        @NotNull final SlashCommandInteractionEvent event,
+        @NotNull final D data,
+        @NotNull final Guild guild
     );
 }

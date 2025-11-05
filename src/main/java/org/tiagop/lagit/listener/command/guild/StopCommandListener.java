@@ -15,9 +15,9 @@ public class StopCommandListener extends AbstractGuildCommandListener<StopComman
     private final ChannelService channelService;
 
     public StopCommandListener(
-            @NotNull final StopCommand command,
-            @NotNull final AudioService audioService,
-            @NotNull final ChannelService channelService
+        @NotNull final StopCommand command,
+        @NotNull final AudioService audioService,
+        @NotNull final ChannelService channelService
     ) {
         super(command);
         this.audioService = audioService;
@@ -26,9 +26,9 @@ public class StopCommandListener extends AbstractGuildCommandListener<StopComman
 
     @Override
     protected void handleCommand(
-            @NotNull final SlashCommandInteractionEvent event,
-            @NotNull final StopCommand.Data data,
-            @NotNull final Guild guild
+        @NotNull final SlashCommandInteractionEvent event,
+        @NotNull final StopCommand.Data data,
+        @NotNull final Guild guild
     ) {
         audioService.stop(guild);
         channelService.leaveChannel(guild);
