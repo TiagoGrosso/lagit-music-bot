@@ -14,6 +14,7 @@ import jakarta.enterprise.inject.Produces;
 public class AudioPlayerManagerProducer {
     private final AudioPlayerManager playerManager;
 
+    @SuppressWarnings("deprecation")
     public AudioPlayerManagerProducer() {
         this.playerManager = new DefaultAudioPlayerManager();
         playerManager.registerSourceManager(youtubeAudioSourceManager());

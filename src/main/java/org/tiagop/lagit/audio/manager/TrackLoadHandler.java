@@ -5,7 +5,6 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.interactions.InteractionHook;
-import org.jetbrains.annotations.NotNull;
 import org.tiagop.lagit.audio.track.TrackManager;
 import org.tiagop.lagit.util.Format;
 
@@ -16,9 +15,9 @@ public class TrackLoadHandler implements AudioLoadResultHandler {
     private final Runnable onSuccessCallback;
 
     public TrackLoadHandler(
-        @NotNull final TrackManager trackManager,
-        @NotNull final InteractionHook interactionHook,
-        @NotNull final Runnable onSuccessCallback
+        final TrackManager trackManager,
+        final InteractionHook interactionHook,
+        final Runnable onSuccessCallback
     ) {
         this.trackManager = trackManager;
         this.interactionHook = interactionHook;

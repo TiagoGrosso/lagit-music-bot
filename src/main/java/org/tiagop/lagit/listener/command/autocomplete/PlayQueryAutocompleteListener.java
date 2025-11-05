@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.tiagop.lagit.command.PlayCommand;
 import org.tiagop.lagit.service.search.SearchResult;
 import org.tiagop.lagit.service.search.SearchService;
@@ -23,7 +22,7 @@ public class PlayQueryAutocompleteListener extends AbstractAutocompleteListener<
     private final SearchService searchService;
 
     protected PlayQueryAutocompleteListener(
-        @NotNull final PlayCommand command,
+        final PlayCommand command,
         final SearchService searchService
     ) {
         super(command, PlayCommand.QUERY_OPTION);
@@ -31,7 +30,7 @@ public class PlayQueryAutocompleteListener extends AbstractAutocompleteListener<
     }
 
     @Override
-    protected void handleAutocomplete(@NotNull final CommandAutoCompleteInteractionEvent event) {
+    protected void handleAutocomplete(final CommandAutoCompleteInteractionEvent event) {
         final var query = event.getFocusedOption().getValue();
         if (StringUtils.isBlank(query)) {
             return;

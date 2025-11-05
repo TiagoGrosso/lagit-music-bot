@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Option<T> {
@@ -16,15 +15,17 @@ public class Option<T> {
     private final String description;
     private final boolean required;
     private final boolean autoComplete;
-    private final Function<OptionMapping, @NotNull T> mapper;
+    private final Function<OptionMapping, T> mapper;
 
+    @Nullable
     private final Integer min;
+    @Nullable
     private final Integer max;
 
     private Option(
-        @NotNull final OptionType type,
-        @NotNull final String name,
-        @NotNull final String description,
+        final OptionType type,
+        final String name,
+        final String description,
         final boolean required,
         final boolean autoComplete,
         final Function<OptionMapping, T> mapper,
@@ -41,13 +42,11 @@ public class Option<T> {
         this.max = max;
     }
 
-    @NotNull
-    public final Optional<T> extractValue(@NotNull final SlashCommandInteractionEvent event) {
+    public final Optional<T> extractValue(final SlashCommandInteractionEvent event) {
         return Optional.ofNullable(event.getOption(name))
             .map(mapper);
     }
 
-    @NotNull
     public final OptionData toOptionData() {
         final var optionData = new OptionData(type, name, description, required, autoComplete);
         if (max != null) {
@@ -60,8 +59,8 @@ public class Option<T> {
     }
 
     public static Option<String> stringOption(
-        @NotNull final String name,
-        @NotNull final String description,
+        final String name,
+        final String description,
         final boolean required,
         final boolean autoComplete
     ) {
@@ -78,8 +77,8 @@ public class Option<T> {
     }
 
     public static Option<Integer> intOption(
-        @NotNull final String name,
-        @NotNull final String description,
+        final String name,
+        final String description,
         final boolean required,
         final boolean autoComplete
     ) {
@@ -96,11 +95,11 @@ public class Option<T> {
     }
 
     public static Option<Integer> intOption(
-        @NotNull final String name,
-        @NotNull final String description,
+        final String name,
+        final String description,
         final boolean required,
         final boolean autoComplete,
-        @NotNull final Pair<Integer, Integer> range
+        final Pair<Integer, Integer> range
     ) {
         return new Option<>(
             OptionType.INTEGER,
@@ -115,8 +114,8 @@ public class Option<T> {
     }
 
     public static Option<Boolean> booleanOption(
-        @NotNull final String name,
-        @NotNull final String description,
+        final String name,
+        final String description,
         final boolean required,
         final boolean autoComplete
     ) {
@@ -156,10 +155,12 @@ public class Option<T> {
         return mapper;
     }
 
+    @Nullable
     public Integer getMin() {
         return min;
     }
 
+    @Nullable
     public Integer getMax() {
         return max;
     }

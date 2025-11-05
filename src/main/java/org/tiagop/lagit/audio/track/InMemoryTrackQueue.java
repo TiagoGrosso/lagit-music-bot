@@ -1,26 +1,26 @@
 package org.tiagop.lagit.audio.track;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class InMemoryTrackQueue implements TrackQueue {
 
-    @NotNull
     private final Queue<AudioTrack> queue;
 
     public InMemoryTrackQueue() {
-        this.queue = new LinkedList<>();
+        this.queue = new ArrayDeque<>();
     }
 
     @Override
-    public void queue(@NotNull final AudioTrack track) {
+    public void queue(final AudioTrack track) {
         queue.add(track);
     }
 
     @Override
+    @Nullable
     public AudioTrack advance(final int num) {
         assert num > 0;
         if (num > queue.size()) {
@@ -34,7 +34,7 @@ public class InMemoryTrackQueue implements TrackQueue {
     }
 
     @Override
-    @NotNull
+
     public List<AudioTrack> list() {
         return List.copyOf(queue);
     }

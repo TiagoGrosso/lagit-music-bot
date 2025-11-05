@@ -4,13 +4,15 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import java.nio.ByteBuffer;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class AudioPlayerSendHandler implements AudioSendHandler {
     private final AudioPlayer audioPlayer;
+
+    @Nullable
     private AudioFrame lastFrame;
 
-    public AudioPlayerSendHandler(@NotNull final AudioPlayer audioPlayer) {
+    public AudioPlayerSendHandler(final AudioPlayer audioPlayer) {
         this.audioPlayer = audioPlayer;
     }
 
@@ -21,7 +23,11 @@ public class AudioPlayerSendHandler implements AudioSendHandler {
     }
 
     @Override
+    @Nullable
     public ByteBuffer provide20MsAudio() {
+        if (lastFrame == null) {
+            return null;
+        }
         return ByteBuffer.wrap(lastFrame.getData());
     }
 

@@ -2,7 +2,6 @@ package org.tiagop.lagit.listener.command.guild;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.jetbrains.annotations.NotNull;
 import org.tiagop.lagit.command.AbstractCommand;
 import org.tiagop.lagit.listener.command.AbstractCommandListener;
 
@@ -14,7 +13,7 @@ public abstract class AbstractGuildCommandListener<D, C extends AbstractCommand<
     }
 
     @Override
-    protected final void handleCommand(@NotNull final SlashCommandInteractionEvent event, @NotNull final D data) {
+    protected final void handleCommand(final SlashCommandInteractionEvent event, final D data) {
         final var guild = event.getGuild();
         if (guild == null) {
             throw new IllegalStateException("Command can only be used in a guild");
@@ -23,8 +22,8 @@ public abstract class AbstractGuildCommandListener<D, C extends AbstractCommand<
     }
 
     protected abstract void handleCommand(
-        @NotNull final SlashCommandInteractionEvent event,
-        @NotNull final D data,
-        @NotNull final Guild guild
+        final SlashCommandInteractionEvent event,
+        final D data,
+        final Guild guild
     );
 }

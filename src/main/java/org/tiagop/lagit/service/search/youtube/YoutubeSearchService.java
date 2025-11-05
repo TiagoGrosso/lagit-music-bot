@@ -2,10 +2,10 @@ package org.tiagop.lagit.service.search.youtube;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.enterprise.context.ApplicationScoped;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.jetbrains.annotations.NotNull;
 import org.tiagop.lagit.service.search.SearchClient;
 import org.tiagop.lagit.service.search.SearchResult;
 
@@ -15,12 +15,13 @@ public class YoutubeSearchService implements SearchClient {
     private final YoutubeSearchClient youtubeSearchClient;
 
     public YoutubeSearchService(
-        @NotNull @RestClient final YoutubeSearchClient youtubeSearchClient
+        @RestClient final YoutubeSearchClient youtubeSearchClient
     ) {
         this.youtubeSearchClient = youtubeSearchClient;
     }
 
-    public List<SearchResult> search(@NotNull final String query) {
+    @Override
+    public List<SearchResult> search(final String query) {
         final var raw = youtubeSearchClient.getSuggestions(new YoutubeSearchClient.MusicSuggestionsRequestBody(query));
         final var tracks = extractTracks(raw);
 
@@ -47,7 +48,7 @@ public class YoutubeSearchService implements SearchClient {
         }
 
         final var items = maybeItems.get();
-        final var tracks = new LinkedList<TrackInfo>();
+        final var tracks = new ArrayList<TrackInfo>();
 
         for (final var track : items.valueStream().toList()) {
             final var columns = track.at("/musicResponsiveListItemRenderer/flexColumns");
@@ -70,7 +71,7 @@ public class YoutubeSearchService implements SearchClient {
                 .valueStream()
                 .toList();
 
-            final var isSong = runs.getFirst().get("text").textValue().toLowerCase().contains("song");
+            final var isSong = runs.getFirst().get("text").textValue().toLowerCase(Locale.ROOT).contains("song");
 
             if (!isSong) {
                 continue;

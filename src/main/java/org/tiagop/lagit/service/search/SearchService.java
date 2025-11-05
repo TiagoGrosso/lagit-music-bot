@@ -5,14 +5,13 @@ import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Comparator;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
 
 @ApplicationScoped
 public class SearchService {
 
     private final List<SearchClient> searchClients;
 
-    public SearchService(@NotNull @All final List<SearchClient> searchClients) {
+    public SearchService(@All final List<SearchClient> searchClients) {
         this.searchClients = searchClients;
     }
 

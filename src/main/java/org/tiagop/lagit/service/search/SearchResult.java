@@ -1,14 +1,13 @@
 package org.tiagop.lagit.service.search;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 
 public record SearchResult(
-    @NotNull Source source,
-    @NotNull String artist,
-    @NotNull String name,
-    @NotNull Type type,
-    @NotNull String id
+    Source source,
+    String artist,
+    String name,
+    Type type,
+    String id
 ) {
 
     public enum Source {
