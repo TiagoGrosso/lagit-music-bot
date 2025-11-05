@@ -30,7 +30,7 @@ public class StopCommandListener extends AbstractGuildCommandListener<StopComman
             @NotNull final StopCommand.Data data,
             @NotNull final Guild guild
     ) {
-        audioService.stopPlaying(guild);
+        audioService.stop(guild);
         channelService.leaveChannel(guild);
         event.reply("Stopped playing").queue();
     }

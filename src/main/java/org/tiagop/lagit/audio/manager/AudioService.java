@@ -8,10 +8,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import org.jetbrains.annotations.NotNull;
 import org.tiagop.lagit.audio.manager.guild.GuildService;
 import org.tiagop.lagit.audio.track.TrackManager;
-import org.tiagop.lagit.audio.track.TryPlayResult;
 
 import java.util.List;
-import java.util.concurrent.Future;
 import java.util.function.Function;
 
 @ApplicationScoped
@@ -27,18 +25,18 @@ public class AudioService {
         this.audioPlayerManager = audioPlayerManager;
     }
 
-    public Future<Void> loadTrack(
+    public void load(
             @NotNull final Guild guild,
             @NotNull final String url,
             @NotNull Function<TrackManager, AudioLoadResultHandler> trackLoadHandlerBuilder
     ) {
         final var trackManager = guildService.getTrackManager(guild);
-        return audioPlayerManager.loadItem(url, trackLoadHandlerBuilder.apply(trackManager));
+        audioPlayerManager.loadItem(url, trackLoadHandlerBuilder.apply(trackManager));
     }
 
-    public TryPlayResult tryPlay(@NotNull final Guild guild) {
+    public void play(@NotNull final Guild guild) {
         final var trackManager = guildService.getTrackManager(guild);
-        return trackManager.tryPlay();
+        trackManager.resumeOrPlayNext();
     }
 
     public void pause(@NotNull final Guild guild) {
@@ -51,9 +49,14 @@ public class AudioService {
         trackManager.clear();
     }
 
-    public void stopPlaying(@NotNull final Guild guild) {
+    public void stop(@NotNull final Guild guild) {
         final var trackManager = guildService.getTrackManager(guild);
         trackManager.stop();
+    }
+
+    public void skip(@NotNull final Guild guild, final int num) {
+        final var trackManager = guildService.getTrackManager(guild);
+        trackManager.skip(num);
     }
 
     public List<AudioTrack> getQueue(@NotNull final Guild guild) {

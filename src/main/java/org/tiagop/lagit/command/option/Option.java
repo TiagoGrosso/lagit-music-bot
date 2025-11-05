@@ -7,7 +7,9 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -25,6 +27,11 @@ public class Option<T> {
     private final boolean autoComplete;
     private final Function<OptionMapping, T> mapper;
 
+    @Nullable
+    private final Integer min;
+    @Nullable
+    private final Integer max;
+
     @NotNull
     public final Optional<T> extractValue(@NotNull final SlashCommandInteractionEvent event) {
         return Optional.ofNullable(event.getOption(name))
@@ -33,7 +40,16 @@ public class Option<T> {
 
     @NotNull
     public final OptionData toOptionData() {
-        return new OptionData(type, name, description).setRequired(required).setAutoComplete(autoComplete);
+        final var optionData = new OptionData(type, name, description)
+                .setRequired(required)
+                .setAutoComplete(autoComplete);
+        if (max != null) {
+            optionData.setMaxValue(max);
+        }
+        if (min != null) {
+            optionData.setMinValue(min);
+        }
+        return optionData;
     }
 
     public static Option<String> stringOption(
@@ -48,7 +64,9 @@ public class Option<T> {
                 description,
                 required,
                 autoComplete,
-                OptionMapping::getAsString
+                OptionMapping::getAsString,
+                null,
+                null
         );
     }
 
@@ -64,7 +82,28 @@ public class Option<T> {
                 description,
                 required,
                 autoComplete,
-                OptionMapping::getAsInt
+                OptionMapping::getAsInt,
+                null,
+                null
+        );
+    }
+
+    public static Option<Integer> intOption(
+            @NotNull final String name,
+            @NotNull final String description,
+            final boolean required,
+            final boolean autoComplete,
+            @NotNull final Pair<Integer, Integer> range
+    ) {
+        return new Option<>(
+                OptionType.INTEGER,
+                name,
+                description,
+                required,
+                autoComplete,
+                OptionMapping::getAsInt,
+                range.getLeft(),
+                range.getRight()
         );
     }
 
@@ -80,7 +119,9 @@ public class Option<T> {
                 description,
                 required,
                 autoComplete,
-                OptionMapping::getAsBoolean
+                OptionMapping::getAsBoolean,
+                null,
+                null
         );
     }
 }
