@@ -1,13 +1,12 @@
 package org.tiagop.lagit.listener;
 
 import io.quarkus.logging.Log;
+import java.util.Collections;
+import java.util.Set;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collections;
-import java.util.Set;
 
 public abstract class AbstractListener<E extends GenericEvent> implements EventListener {
     private final Class<E> eventClass;

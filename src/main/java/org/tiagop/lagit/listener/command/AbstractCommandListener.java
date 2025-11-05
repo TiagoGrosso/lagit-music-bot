@@ -1,7 +1,6 @@
 package org.tiagop.lagit.listener.command;
 
 import io.quarkus.logging.Log;
-import jakarta.inject.Inject;
 import lombok.Getter;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +8,8 @@ import org.tiagop.lagit.command.AbstractCommand;
 import org.tiagop.lagit.listener.AbstractListener;
 
 @Getter
-public abstract class AbstractCommandListener<D, C extends AbstractCommand<D>> extends AbstractListener<SlashCommandInteractionEvent> {
+public abstract class AbstractCommandListener<D, C extends AbstractCommand<D>>
+    extends AbstractListener<SlashCommandInteractionEvent> {
 
     private final C command;
 

@@ -13,9 +13,9 @@ public final class Format {
 
     public static String trackInfoString(final AudioTrack track) {
         return TRACK_FORMAT.formatted(
-                trimYoutubeTopic(track.getInfo().author),
-                track.getInfo().title,
-                DurationFormatUtils.formatDuration(track.getDuration(), TRACK_DURATION_FORMAT)
+            trimYoutubeTopic(track.getInfo().author),
+            track.getInfo().title,
+            DurationFormatUtils.formatDuration(track.getDuration(), TRACK_DURATION_FORMAT)
         );
     }
 

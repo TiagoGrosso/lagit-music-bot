@@ -13,8 +13,8 @@ public class SkipCommandListener extends AbstractGuildCommandListener<SkipComman
     private final AudioService audioService;
 
     public SkipCommandListener(
-            @NotNull final SkipCommand command,
-            @NotNull final AudioService audioService
+        @NotNull final SkipCommand command,
+        @NotNull final AudioService audioService
     ) {
         super(command);
         this.audioService = audioService;
@@ -22,9 +22,9 @@ public class SkipCommandListener extends AbstractGuildCommandListener<SkipComman
 
     @Override
     protected void handleCommand(
-            @NotNull final SlashCommandInteractionEvent event,
-            @NotNull final SkipCommand.Data data,
-            @NotNull final Guild guild
+        @NotNull final SlashCommandInteractionEvent event,
+        @NotNull final SkipCommand.Data data,
+        @NotNull final Guild guild
     ) {
         audioService.skip(guild, data.songsToSkip().orElse(1));
         event.reply("Skipped " + data.songsToSkip().orElse(1) + " songs").queue();

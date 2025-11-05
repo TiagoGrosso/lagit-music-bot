@@ -1,10 +1,9 @@
 package org.tiagop.lagit.command;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import java.util.Collections;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collections;
 
 @ApplicationScoped
 public class StopCommand extends AbstractCommand<StopCommand.Data> {

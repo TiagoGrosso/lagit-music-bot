@@ -4,11 +4,10 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 import java.util.function.Supplier;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import org.jetbrains.annotations.NotNull;
 
 public class TrackManager extends AudioEventAdapter {
 
@@ -17,8 +16,8 @@ public class TrackManager extends AudioEventAdapter {
     private final TrackQueue trackQueue;
 
     public TrackManager(
-            @NotNull final AudioPlayer audioPlayer,
-            @NotNull final Supplier<TextChannel> defaultChannelSupplier
+        @NotNull final AudioPlayer audioPlayer,
+        @NotNull final Supplier<TextChannel> defaultChannelSupplier
     ) {
         this.audioPlayer = audioPlayer;
         this.audioPlayer.addListener(this);

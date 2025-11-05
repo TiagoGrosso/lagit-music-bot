@@ -22,9 +22,10 @@ public interface YoutubeSearchClient {
 
         record Context(Client client) {
             record Client(
-                    String clientName,
-                    String clientVersion
-            ) { }
+                String clientName,
+                String clientVersion
+            ) {
+            }
         }
     }
 }

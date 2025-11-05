@@ -1,23 +1,22 @@
 package org.tiagop.lagit.audio.track;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
-import com.sedmelluq.discord.lavaplayer.track.BaseAudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.Random;
-import java.util.UUID;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import com.sedmelluq.discord.lavaplayer.track.BaseAudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor;
+import java.util.Random;
+import java.util.UUID;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class TrackManagerTest {
     private static final Random RANDOM = new Random();
@@ -111,12 +110,12 @@ class TrackManagerTest {
 
         public TestAudioTrack() {
             super(new AudioTrackInfo(
-                    "",
-                    "",
-                    RANDOM.nextLong(100, 1000),
-                    UUID.randomUUID().toString(),
-                    false,
-                    UUID.randomUUID().toString()
+                "",
+                "",
+                RANDOM.nextLong(100, 1000),
+                UUID.randomUUID().toString(),
+                false,
+                UUID.randomUUID().toString()
             ));
         }
 

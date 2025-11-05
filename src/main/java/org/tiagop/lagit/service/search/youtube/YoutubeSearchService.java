@@ -2,13 +2,12 @@ package org.tiagop.lagit.service.search.youtube;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.enterprise.context.ApplicationScoped;
+import java.util.LinkedList;
+import java.util.List;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jetbrains.annotations.NotNull;
 import org.tiagop.lagit.service.search.SearchClient;
 import org.tiagop.lagit.service.search.SearchResult;
-
-import java.util.LinkedList;
-import java.util.List;
 
 @ApplicationScoped
 public class YoutubeSearchService implements SearchClient {
@@ -16,7 +15,7 @@ public class YoutubeSearchService implements SearchClient {
     private final YoutubeSearchClient youtubeSearchClient;
 
     public YoutubeSearchService(
-            @NotNull @RestClient final YoutubeSearchClient youtubeSearchClient
+        @NotNull @RestClient final YoutubeSearchClient youtubeSearchClient
     ) {
         this.youtubeSearchClient = youtubeSearchClient;
     }
@@ -26,18 +25,18 @@ public class YoutubeSearchService implements SearchClient {
         final var tracks = extractTracks(raw);
 
         return tracks.stream()
-                .map(t -> new SearchResult(
-                        SearchResult.Source.YOUTUBE,
-                        t.artist,
-                        t.title,
-                        SearchResult.Type.UNKNOWN,
-                        t.videoId))
-                .toList();
+            .map(t -> new SearchResult(
+                SearchResult.Source.YOUTUBE,
+                t.artist,
+                t.title,
+                SearchResult.Type.UNKNOWN,
+                t.videoId))
+            .toList();
     }
 
-
     private static List<TrackInfo> extractTracks(JsonNode root) {
-        final var maybeItems = root.at("/contents/tabbedSearchResultsRenderer/tabs/0/tabRenderer/content/sectionListRenderer/contents")
+        final var maybeItems =
+            root.at("/contents/tabbedSearchResultsRenderer/tabs/0/tabRenderer/content/sectionListRenderer/contents")
                 .valueStream()
                 .filter(item -> item.hasNonNull("musicShelfRenderer"))
                 .findFirst()
@@ -68,8 +67,8 @@ public class YoutubeSearchService implements SearchClient {
             final var videoId = videoIdNode.textValue();
 
             final var runs = columns.at("/1/musicResponsiveListItemFlexColumnRenderer/text/runs")
-                    .valueStream()
-                    .toList();
+                .valueStream()
+                .toList();
 
             final var isSong = runs.getFirst().get("text").textValue().toLowerCase().contains("song");
 
@@ -86,11 +85,10 @@ public class YoutubeSearchService implements SearchClient {
         return tracks;
     }
 
-
     record TrackInfo(
-            String videoId,
-            String title,
-            String artist
+        String videoId,
+        String title,
+        String artist
     ) {
         public TrackInfo(String videoId, String title, String artist) {
             this.videoId = videoId;

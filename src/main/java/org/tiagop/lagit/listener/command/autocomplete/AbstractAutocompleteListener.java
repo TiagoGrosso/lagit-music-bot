@@ -8,7 +8,7 @@ import org.tiagop.lagit.command.option.Option;
 import org.tiagop.lagit.listener.AbstractListener;
 
 public abstract class AbstractAutocompleteListener<C extends AbstractCommand<?>>
-        extends AbstractListener<CommandAutoCompleteInteractionEvent> {
+    extends AbstractListener<CommandAutoCompleteInteractionEvent> {
 
     private final AbstractCommand<?> command;
     private final Option<?> option;
@@ -34,6 +34,6 @@ public abstract class AbstractAutocompleteListener<C extends AbstractCommand<?>>
     }
 
     protected abstract void handleAutocomplete(
-            @NotNull final CommandAutoCompleteInteractionEvent event
+        @NotNull final CommandAutoCompleteInteractionEvent event
     );
 }

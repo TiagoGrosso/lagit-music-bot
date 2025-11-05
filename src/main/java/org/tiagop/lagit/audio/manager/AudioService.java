@@ -4,13 +4,12 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import jakarta.enterprise.context.ApplicationScoped;
+import java.util.List;
+import java.util.function.Function;
 import net.dv8tion.jda.api.entities.Guild;
 import org.jetbrains.annotations.NotNull;
 import org.tiagop.lagit.audio.manager.guild.GuildService;
 import org.tiagop.lagit.audio.track.TrackManager;
-
-import java.util.List;
-import java.util.function.Function;
 
 @ApplicationScoped
 
@@ -26,9 +25,9 @@ public class AudioService {
     }
 
     public void load(
-            @NotNull final Guild guild,
-            @NotNull final String url,
-            @NotNull Function<TrackManager, AudioLoadResultHandler> trackLoadHandlerBuilder
+        @NotNull final Guild guild,
+        @NotNull final String url,
+        @NotNull Function<TrackManager, AudioLoadResultHandler> trackLoadHandlerBuilder
     ) {
         final var trackManager = guildService.getTrackManager(guild);
         audioPlayerManager.loadItem(url, trackLoadHandlerBuilder.apply(trackManager));
