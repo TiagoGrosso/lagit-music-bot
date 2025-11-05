@@ -1,7 +1,5 @@
 package org.tiagop.lagit.service.search;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,13 +11,24 @@ public record SearchResult(
     @NotNull String id
 ) {
 
-    @RequiredArgsConstructor
-    @Getter
     public enum Source {
         YOUTUBE("Youtube", "ytmsearch");
 
         private final String sourceName;
         private final String searchPrefix;
+
+        Source(final String sourceName, final String searchPrefix) {
+            this.sourceName = sourceName;
+            this.searchPrefix = searchPrefix;
+        }
+
+        public String getSearchPrefix() {
+            return searchPrefix;
+        }
+
+        public String getSourceName() {
+            return sourceName;
+        }
     }
 
     public enum Type {

@@ -4,17 +4,26 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import org.jetbrains.annotations.NotNull;
 import org.tiagop.lagit.audio.track.TrackManager;
 import org.tiagop.lagit.util.Format;
 
-@RequiredArgsConstructor
 public class TrackLoadHandler implements AudioLoadResultHandler {
 
     private final TrackManager trackManager;
     private final InteractionHook interactionHook;
     private final Runnable onSuccessCallback;
+
+    public TrackLoadHandler(
+        @NotNull final TrackManager trackManager,
+        @NotNull final InteractionHook interactionHook,
+        @NotNull final Runnable onSuccessCallback
+    ) {
+        this.trackManager = trackManager;
+        this.interactionHook = interactionHook;
+        this.onSuccessCallback = onSuccessCallback;
+    }
 
     private void loadTrack(final AudioTrack track) {
         trackManager.queue(track);

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class InMemoryTrackQueue implements TrackQueue {
 
+    @NotNull
     private final Queue<AudioTrack> queue;
 
     public InMemoryTrackQueue() {
