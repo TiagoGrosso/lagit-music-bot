@@ -6,6 +6,7 @@ import java.util.Set;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import org.tiagop.lagit.util.Executor;
 
 public abstract class AbstractListener<E extends GenericEvent> implements EventListener {
     private final Class<E> eventClass;
@@ -24,7 +25,11 @@ public abstract class AbstractListener<E extends GenericEvent> implements EventL
             Log.debugf("Ignoring event of type %s", event.getClass().getSimpleName());
             return;
         }
-        processEvent(eventClass.cast(event));
+        Executor.executeInVirtualThread(() -> processEvent(eventClass.cast(event)))
+            .exceptionally(error -> {
+                Log.errorf(error, "Error processing event %s", event.getClass().getSimpleName());
+                return null;
+            });
     }
 
     protected abstract void processEvent(final E event);

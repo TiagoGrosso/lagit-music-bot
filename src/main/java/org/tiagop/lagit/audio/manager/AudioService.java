@@ -1,35 +1,27 @@
 package org.tiagop.lagit.audio.manager;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
-import java.util.function.Function;
 import net.dv8tion.jda.api.entities.Guild;
 import org.tiagop.lagit.audio.manager.guild.GuildService;
-import org.tiagop.lagit.audio.track.TrackManager;
 
 @ApplicationScoped
 
 public class AudioService {
 
     private final GuildService guildService;
-    private final AudioPlayerManager audioPlayerManager;
 
-    public AudioService(final GuildService guildService,
-                        final AudioPlayerManager audioPlayerManager) {
+    public AudioService(final GuildService guildService) {
         this.guildService = guildService;
-        this.audioPlayerManager = audioPlayerManager;
     }
 
-    public void load(
+    public void queue(
         final Guild guild,
-        final String url,
-        Function<TrackManager, AudioLoadResultHandler> trackLoadHandlerBuilder
+        final AudioTrack track
     ) {
         final var trackManager = guildService.getTrackManager(guild);
-        audioPlayerManager.loadItem(url, trackLoadHandlerBuilder.apply(trackManager));
+        trackManager.queue(track);
     }
 
     public void play(final Guild guild) {
