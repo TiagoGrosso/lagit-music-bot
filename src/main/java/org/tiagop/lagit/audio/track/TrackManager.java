@@ -5,27 +5,21 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import java.util.List;
-import java.util.function.Supplier;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import org.jetbrains.annotations.NotNull;
 
 public class TrackManager extends AudioEventAdapter {
 
     private final AudioPlayer audioPlayer;
-    private final Supplier<TextChannel> defaultChannelSupplier;
     private final TrackQueue trackQueue;
 
     public TrackManager(
-        @NotNull final AudioPlayer audioPlayer,
-        @NotNull final Supplier<TextChannel> defaultChannelSupplier
+        final AudioPlayer audioPlayer
     ) {
         this.audioPlayer = audioPlayer;
         this.audioPlayer.addListener(this);
         this.trackQueue = new InMemoryTrackQueue();
-        this.defaultChannelSupplier = defaultChannelSupplier;
     }
 
-    public void queue(@NotNull AudioTrack track) {
+    public void queue(AudioTrack track) {
         trackQueue.queue(track);
         if (getCurrentTrack() == null) {
             playNext();
@@ -40,7 +34,6 @@ public class TrackManager extends AudioEventAdapter {
         playNext();
     }
 
-    @NotNull
     public List<AudioTrack> getQueue() {
         return trackQueue.list();
     }

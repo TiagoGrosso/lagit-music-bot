@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.jetbrains.annotations.NotNull;
 import org.tiagop.lagit.command.AbstractCommand;
 import org.tiagop.lagit.listener.AbstractListener;
 import org.tiagop.lagit.listener.command.AbstractCommandListener;
@@ -24,8 +23,8 @@ public class Bot {
     private final JDA jda;
 
     public Bot(
-        @All @NotNull final List<AbstractListener<?>> listeners,
-        @ConfigProperty(name = "discord.token") @NotNull final String token
+        @All final List<AbstractListener<?>> listeners,
+        @ConfigProperty(name = "discord.token") final String token
     ) {
         Log.info("Starting Lagit Music Bot");
         jda = JDABuilder.createDefault(token)

@@ -2,7 +2,6 @@ package org.tiagop.lagit.audio.track;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.clearInvocations;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -14,21 +13,19 @@ import com.sedmelluq.discord.lavaplayer.track.BaseAudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor;
 import java.util.Random;
 import java.util.UUID;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class TrackManagerTest {
     private static final Random RANDOM = new Random();
 
-    private final TextChannel textChannel = mock();
     private AudioPlayer audioPlayer;
     private TrackManager trackManager;
 
     @BeforeEach
     public void setup() {
         audioPlayer = spy(new DefaultAudioPlayerManager().createPlayer());
-        trackManager = new TrackManager(audioPlayer, () -> textChannel);
+        trackManager = new TrackManager(audioPlayer);
         clearInvocations(audioPlayer);
     }
 

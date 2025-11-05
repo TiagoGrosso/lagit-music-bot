@@ -3,7 +3,6 @@ package org.tiagop.lagit.listener.command.guild;
 import jakarta.enterprise.context.Dependent;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.jetbrains.annotations.NotNull;
 import org.tiagop.lagit.audio.manager.AudioService;
 import org.tiagop.lagit.command.SkipCommand;
 
@@ -13,8 +12,8 @@ public class SkipCommandListener extends AbstractGuildCommandListener<SkipComman
     private final AudioService audioService;
 
     public SkipCommandListener(
-        @NotNull final SkipCommand command,
-        @NotNull final AudioService audioService
+        final SkipCommand command,
+        final AudioService audioService
     ) {
         super(command);
         this.audioService = audioService;
@@ -22,9 +21,9 @@ public class SkipCommandListener extends AbstractGuildCommandListener<SkipComman
 
     @Override
     protected void handleCommand(
-        @NotNull final SlashCommandInteractionEvent event,
-        @NotNull final SkipCommand.Data data,
-        @NotNull final Guild guild
+        final SlashCommandInteractionEvent event,
+        final SkipCommand.Data data,
+        final Guild guild
     ) {
         audioService.skip(guild, data.songsToSkip().orElse(1));
         event.reply("Skipped " + data.songsToSkip().orElse(1) + " songs").queue();

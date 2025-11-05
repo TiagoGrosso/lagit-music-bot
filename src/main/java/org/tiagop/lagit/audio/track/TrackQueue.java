@@ -2,15 +2,15 @@ package org.tiagop.lagit.audio.track;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface TrackQueue {
 
-    void queue(@NotNull AudioTrack track);
+    void queue(AudioTrack track);
 
+    @Nullable
     AudioTrack advance(int num);
 
-    @NotNull
     List<AudioTrack> list();
 
     void clear();

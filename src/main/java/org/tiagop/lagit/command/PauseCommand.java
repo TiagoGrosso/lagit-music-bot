@@ -3,7 +3,6 @@ package org.tiagop.lagit.command;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Collections;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.jetbrains.annotations.NotNull;
 
 @ApplicationScoped
 public class PauseCommand extends AbstractCommand<PauseCommand.Data> {
@@ -15,7 +14,7 @@ public class PauseCommand extends AbstractCommand<PauseCommand.Data> {
     }
 
     @Override
-    public Data parseData(@NotNull final SlashCommandInteractionEvent event) {
+    public Data parseData(final SlashCommandInteractionEvent event) {
         return new Data();
     }
 

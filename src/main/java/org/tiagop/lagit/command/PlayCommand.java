@@ -4,7 +4,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
 import java.util.Optional;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.jetbrains.annotations.NotNull;
 import org.tiagop.lagit.command.option.Option;
 
 @ApplicationScoped
@@ -23,12 +22,12 @@ public class PlayCommand extends AbstractCommand<PlayCommand.Data> {
     }
 
     @Override
-    public Data parseData(@NotNull final SlashCommandInteractionEvent event) {
+    public Data parseData(final SlashCommandInteractionEvent event) {
         return new Data(event);
     }
 
     public record Data(Optional<String> query) {
-        public Data(@NotNull final SlashCommandInteractionEvent event) {
+        public Data(final SlashCommandInteractionEvent event) {
             this(QUERY_OPTION.extractValue(event));
         }
     }

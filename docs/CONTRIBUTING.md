@@ -21,15 +21,24 @@ for the most used IDEs.
 
 This project uses [Spotbugs](https://spotbugs.github.io/) to detect some known code issues and vulnerabilities.
 
-Builds will fail if your code has these issues. Therefore, it is *highly encouraged* that you:
+Builds will fail if your code has these issues. Therefore, to help you identify them proactively, you can:
 
 * Install the Spotbugs plugin in your IDE of choice
 * Configure the plugin to use the local exclusion file `config/spotbugs-exclude-filter.xml` to avoid some false
   positives due to Quarkus' dependency injection
 
-> [!WARNING]
-> If you compile your code through Intellij, you will get generated sources with helpers for detecting Nullability.
-> This is due to the usage of @NotNull and @Nullable across the repo.
->
-> This, however, doesn't play too nicely with some of Spotbugs checks, and you might get some Redundant Null Check
-> errors in your Spotbugs plugin. These go away with an `mvn clean install`
+Otherwise, the build pipeline (`mvn clean install`) will warn you of what you need to fix
+
+## Error Prone
+
+This project uses [Error Prone](https://errorprone.info/)  to detect common bugs.
+
+If you are used to compiling the project in your IDE, you can install and configure the Error Prone plugin in Intellij
+or Eclipse. Check their respective section in
+the [Error Prone Installation Guide](https://errorprone.info/docs/installation).
+
+## NullAway
+
+This project uses [NullAway](https://github.com/uber/NullAway) to detect potential Null Pointer Exceptions. By default,
+every field and method is non-nullable. If you wish it to be nullable, you have to annotate it with `@Nullable`. When
+building the project through Maven, you will get errors if you are trying to pass `null` to non-nullable fields.

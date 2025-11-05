@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
 import org.tiagop.lagit.command.option.Option;
 
 @ApplicationScoped
@@ -25,12 +24,12 @@ public class SkipCommand extends AbstractCommand<SkipCommand.Data> {
     }
 
     @Override
-    public Data parseData(@NotNull final SlashCommandInteractionEvent event) {
+    public Data parseData(final SlashCommandInteractionEvent event) {
         return new Data(event);
     }
 
     public record Data(Optional<Integer> songsToSkip) {
-        public Data(@NotNull final SlashCommandInteractionEvent event) {
+        public Data(final SlashCommandInteractionEvent event) {
             this(SONGS_TO_SKIP_OPTION.extractValue(event));
         }
     }

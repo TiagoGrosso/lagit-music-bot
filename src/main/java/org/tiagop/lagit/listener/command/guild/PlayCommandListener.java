@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.jetbrains.annotations.NotNull;
 import org.tiagop.lagit.audio.manager.AudioService;
 import org.tiagop.lagit.audio.manager.ChannelService;
 import org.tiagop.lagit.audio.manager.TrackLoadHandler;
@@ -21,9 +20,9 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
     private final ChannelService channelService;
 
     public PlayCommandListener(
-        @NotNull final PlayCommand command,
-        @NotNull final AudioService audioService,
-        @NotNull final ChannelService channelService
+        final PlayCommand command,
+        final AudioService audioService,
+        final ChannelService channelService
     ) {
         super(command);
         this.audioService = audioService;
@@ -32,9 +31,9 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
 
     @Override
     protected void handleCommand(
-        @NotNull final SlashCommandInteractionEvent event,
-        @NotNull final PlayCommand.Data data,
-        @NotNull final Guild guild
+        final SlashCommandInteractionEvent event,
+        final PlayCommand.Data data,
+        final Guild guild
     ) {
         final var maybeChannel = Optional.ofNullable(event.getMember())
             .map(Member::getVoiceState)
@@ -48,10 +47,10 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
     }
 
     private void handleCommand(
-        @NotNull final Guild guild,
-        @NotNull final VoiceChannel channel,
-        @NotNull final SlashCommandInteractionEvent event,
-        @NotNull PlayCommand.Data data
+        final Guild guild,
+        final VoiceChannel channel,
+        final SlashCommandInteractionEvent event,
+        PlayCommand.Data data
     ) {
         data.query().ifPresentOrElse(
             (query) -> loadTrackAndJoinChannel(guild, channel, event, query),
@@ -60,9 +59,9 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
     }
 
     private void startPlaying(
-        @NotNull final Guild guild,
-        @NotNull final VoiceChannel channel,
-        @NotNull final SlashCommandInteractionEvent event
+        final Guild guild,
+        final VoiceChannel channel,
+        final SlashCommandInteractionEvent event
     ) {
         audioService.play(guild);
         channelService.joinChannel(channel);
@@ -70,10 +69,10 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
     }
 
     private void loadTrackAndJoinChannel(
-        @NotNull final Guild guild,
-        @NotNull final VoiceChannel channel,
-        @NotNull final SlashCommandInteractionEvent event,
-        @NotNull String query
+        final Guild guild,
+        final VoiceChannel channel,
+        final SlashCommandInteractionEvent event,
+        String query
     ) {
         event.deferReply().queue();
         audioService.load(
