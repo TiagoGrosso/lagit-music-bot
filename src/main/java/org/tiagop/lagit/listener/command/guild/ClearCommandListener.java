@@ -3,20 +3,20 @@ package org.tiagop.lagit.listener.command.guild;
 import jakarta.enterprise.context.Dependent;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.tiagop.lagit.audio.manager.AudioService;
 import org.tiagop.lagit.command.ClearCommand;
+import org.tiagop.lagit.guild.GuildService;
 
 @Dependent
 public class ClearCommandListener extends AbstractGuildCommandListener<ClearCommand.Data, ClearCommand> {
 
-    private final AudioService audioService;
+    private final GuildService guildService;
 
     public ClearCommandListener(
         final ClearCommand command,
-        final AudioService audioService
+        final GuildService guildService
     ) {
         super(command);
-        this.audioService = audioService;
+        this.guildService = guildService;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ClearCommandListener extends AbstractGuildCommandListener<ClearComm
         final ClearCommand.Data data,
         final Guild guild
     ) {
-        audioService.clearQueue(guild);
+        guildService.getTrackManager(guild).clear();
         event.reply("Queue cleared").queue();
     }
 }

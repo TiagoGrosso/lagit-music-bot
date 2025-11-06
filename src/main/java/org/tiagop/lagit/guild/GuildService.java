@@ -5,9 +5,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.managers.AudioManager;
 import org.tiagop.lagit.audio.AudioPlayerSendHandler;
 import org.tiagop.lagit.audio.track.TrackManager;
+import org.tiagop.lagit.guild.channel.ChannelManager;
 
 @ApplicationScoped
 public class GuildService {
@@ -24,11 +24,14 @@ public class GuildService {
     private GuildContext getGuildContext(final Guild guild) {
         return guildContexts.computeIfAbsent(guild.getId(), id -> {
             final var audioPlayer = playerManager.createPlayer();
-            return new GuildContext(
+            final var channelManager = new ChannelManager(
+                guild,
                 guild.getAudioManager(),
-                audioPlayer,
-                new TrackManager(audioPlayer),
                 new AudioPlayerSendHandler(audioPlayer)
+            );
+            return new GuildContext(
+                new TrackManager(audioPlayer, channelManager),
+                channelManager
             );
         });
     }
@@ -37,11 +40,8 @@ public class GuildService {
         return getGuildContext(guild).trackManager();
     }
 
-    public AudioManager getAudioManager(final Guild guild) {
-        return getGuildContext(guild).audioManager();
+    public ChannelManager getChannelManager(final Guild guild) {
+        return getGuildContext(guild).channelManager();
     }
 
-    public AudioPlayerSendHandler getAudioPlayerSendHandler(final Guild guild) {
-        return getGuildContext(guild).audioPlayerSendHandler();
-    }
 }

@@ -5,22 +5,27 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import java.util.List;
+import org.tiagop.lagit.guild.channel.ChannelManager;
+import org.tiagop.lagit.guild.channel.embeds.TrackStartedEmbed;
 
 public class TrackManager extends AudioEventAdapter {
 
     private final AudioPlayer audioPlayer;
     private final TrackQueue trackQueue;
+    private final ChannelManager channelManager;
 
     public TrackManager(
-        final AudioPlayer audioPlayer
+        final AudioPlayer audioPlayer,
+        final ChannelManager channelManager
     ) {
         this.audioPlayer = audioPlayer;
+        this.channelManager = channelManager;
         this.audioPlayer.addListener(this);
         this.trackQueue = new InMemoryTrackQueue();
     }
 
-    public void queue(final AudioTrack track) {
-        trackQueue.queue(track);
+    public void queue(final TrackRequest request) {
+        trackQueue.queue(request);
         if (getCurrentTrack() == null) {
             playNext();
         }
@@ -34,7 +39,7 @@ public class TrackManager extends AudioEventAdapter {
         playNext();
     }
 
-    public List<AudioTrack> getQueue() {
+    public List<TrackRequest> getQueue() {
         return trackQueue.list();
     }
 
@@ -51,7 +56,8 @@ public class TrackManager extends AudioEventAdapter {
         if (next == null) {
             return;
         }
-        audioPlayer.playTrack(next);
+        audioPlayer.playTrack(next.track());
+        channelManager.sendMessageEmbed(new TrackStartedEmbed(next));
     }
 
     public void pause() {

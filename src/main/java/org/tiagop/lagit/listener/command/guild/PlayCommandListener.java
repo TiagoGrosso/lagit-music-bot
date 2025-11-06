@@ -12,27 +12,24 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.tiagop.lagit.audio.manager.AudioService;
+import org.tiagop.lagit.audio.track.TrackRequest;
 import org.tiagop.lagit.command.PlayCommand;
-import org.tiagop.lagit.guild.channel.ChannelService;
+import org.tiagop.lagit.guild.GuildService;
 import org.tiagop.lagit.util.Format;
 
 @Dependent
 public class PlayCommandListener extends AbstractGuildCommandListener<PlayCommand.Data, PlayCommand> {
 
-    private final AudioService audioService;
-    private final ChannelService channelService;
+    private final GuildService guildService;
     private final AudioPlayerManager audioPlayerManager;
 
     public PlayCommandListener(
         final PlayCommand command,
-        final AudioService audioService,
-        final ChannelService channelService,
+        final GuildService guildService,
         final AudioPlayerManager audioPlayerManager
     ) {
         super(command);
-        this.audioService = audioService;
-        this.channelService = channelService;
+        this.guildService = guildService;
         this.audioPlayerManager = audioPlayerManager;
     }
 
@@ -70,8 +67,8 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
         final VoiceChannel channel,
         final SlashCommandInteractionEvent event
     ) {
-        audioService.play(guild);
-        channelService.joinChannel(channel);
+        guildService.getTrackManager(guild).resumeOrPlayNext();
+        guildService.getChannelManager(guild).joinChannel(channel);
         event.reply("Started playing").queue();
     }
 
@@ -106,9 +103,9 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
         final List<AudioTrack> tracks
     ) {
         for (final var track : tracks) {
-            audioService.queue(guild, track);
+            guildService.getTrackManager(guild).queue(new TrackRequest(track, event.getUser().getAsTag()));
         }
-        channelService.joinChannel(channel);
+        guildService.getChannelManager(guild).joinChannel(channel);
         event.getHook()
             .sendMessage("Added '%s' to queue and %d others".formatted(
                 Format.trackInfoString(tracks.getFirst()),
@@ -122,8 +119,8 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
         final VoiceChannel channel,
         final SlashCommandInteractionEvent event
     ) {
-        audioService.queue(guild, track);
-        channelService.joinChannel(channel);
+        guildService.getTrackManager(guild).queue(new TrackRequest(track, event.getUser().getAsTag()));
+        guildService.getChannelManager(guild).joinChannel(channel);
         event.getHook()
             .sendMessage("Added '%s' to queue".formatted(Format.trackInfoString(track)))
             .queue();

@@ -3,24 +3,20 @@ package org.tiagop.lagit.listener.command.guild;
 import jakarta.enterprise.context.Dependent;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.tiagop.lagit.audio.manager.AudioService;
 import org.tiagop.lagit.command.StopCommand;
-import org.tiagop.lagit.guild.channel.ChannelService;
+import org.tiagop.lagit.guild.GuildService;
 
 @Dependent
 public class StopCommandListener extends AbstractGuildCommandListener<StopCommand.Data, StopCommand> {
 
-    private final AudioService audioService;
-    private final ChannelService channelService;
+    private final GuildService guildService;
 
     public StopCommandListener(
         final StopCommand command,
-        final AudioService audioService,
-        final ChannelService channelService
+        final GuildService guildService
     ) {
         super(command);
-        this.audioService = audioService;
-        this.channelService = channelService;
+        this.guildService = guildService;
     }
 
     @Override
@@ -29,8 +25,8 @@ public class StopCommandListener extends AbstractGuildCommandListener<StopComman
         final StopCommand.Data data,
         final Guild guild
     ) {
-        audioService.stop(guild);
-        channelService.leaveChannel(guild);
+        guildService.getTrackManager(guild).stop();
+        guildService.getChannelManager(guild).leaveChannel();
         event.reply("Stopped playing").queue();
     }
 }

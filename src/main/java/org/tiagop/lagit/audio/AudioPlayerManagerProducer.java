@@ -1,4 +1,4 @@
-package org.tiagop.lagit.audio.manager;
+package org.tiagop.lagit.audio;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
