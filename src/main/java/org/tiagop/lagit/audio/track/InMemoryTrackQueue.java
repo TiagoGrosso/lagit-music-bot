@@ -1,6 +1,5 @@
 package org.tiagop.lagit.audio.track;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
@@ -8,20 +7,20 @@ import org.jetbrains.annotations.Nullable;
 
 public class InMemoryTrackQueue implements TrackQueue {
 
-    private final Queue<AudioTrack> queue;
+    private final Queue<TrackRequest> queue;
 
     public InMemoryTrackQueue() {
         this.queue = new ArrayDeque<>();
     }
 
     @Override
-    public void queue(final AudioTrack track) {
+    public void queue(final TrackRequest track) {
         queue.add(track);
     }
 
     @Override
     @Nullable
-    public AudioTrack advance(final int num) {
+    public TrackRequest advance(final int num) {
         assert num > 0;
         if (num > queue.size()) {
             queue.clear();
@@ -35,7 +34,7 @@ public class InMemoryTrackQueue implements TrackQueue {
 
     @Override
 
-    public List<AudioTrack> list() {
+    public List<TrackRequest> list() {
         return List.copyOf(queue);
     }
 
