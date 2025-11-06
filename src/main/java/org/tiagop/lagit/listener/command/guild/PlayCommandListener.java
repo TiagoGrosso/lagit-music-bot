@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import jakarta.enterprise.context.Dependent;
+import java.util.List;
 import java.util.Optional;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
@@ -12,8 +13,8 @@ import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.tiagop.lagit.audio.manager.AudioService;
-import org.tiagop.lagit.audio.manager.ChannelService;
 import org.tiagop.lagit.command.PlayCommand;
+import org.tiagop.lagit.guild.channel.ChannelService;
 import org.tiagop.lagit.util.Format;
 
 @Dependent
@@ -56,7 +57,7 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
         final Guild guild,
         final VoiceChannel channel,
         final SlashCommandInteractionEvent event,
-        PlayCommand.Data data
+        final PlayCommand.Data data
     ) {
         data.query().ifPresentOrElse(
             (query) -> loadTrackAndJoinChannel(guild, channel, event, query),
@@ -78,41 +79,53 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
         final Guild guild,
         final VoiceChannel channel,
         final SlashCommandInteractionEvent event,
-        String query
+        final String query
     ) {
         event.deferReply().queue();
         final var loaded = audioPlayerManager.loadItemSync(query);
         switch (loaded) {
             case AudioTrack track -> {
-                audioService.queue(guild, track);
-                channelService.joinChannel(channel);
-                event.getHook()
-                    .sendMessage("Added '%s' to queue".formatted(Format.trackInfoString(track)))
-                    .queue();
+                addSingleTrackToQueue(guild, track, channel, event);
             }
             case AudioPlaylist playlist -> {
                 if (playlist.isSearchResult()) {
-                    final var track = playlist.getTracks().getFirst();
-                    audioService.queue(guild, track);
-                    channelService.joinChannel(channel);
-                    event.getHook()
-                        .sendMessage("Added '%s' to queue".formatted(Format.trackInfoString(track)))
-                        .queue();
+                    addSingleTrackToQueue(guild, playlist.getTracks().getFirst(), channel, event);
                     return;
                 }
                 final var tracks = playlist.getTracks();
-                for (final var track : tracks) {
-                    audioService.queue(guild, track);
-                }
-                channelService.joinChannel(channel);
-                event.getHook()
-                    .sendMessage("Added '%s' to queue and %d others".formatted(
-                        Format.trackInfoString(tracks.getFirst()),
-                        tracks.size()))
-                    .queue();
+                addMultipleTracksToQueue(guild, channel, event, tracks);
             }
             case null, default -> event.getHook().sendMessage("No matches found").queue();
         }
+    }
 
+    private void addMultipleTracksToQueue(
+        final Guild guild,
+        final VoiceChannel channel,
+        final SlashCommandInteractionEvent event,
+        final List<AudioTrack> tracks
+    ) {
+        for (final var track : tracks) {
+            audioService.queue(guild, track);
+        }
+        channelService.joinChannel(channel);
+        event.getHook()
+            .sendMessage("Added '%s' to queue and %d others".formatted(
+                Format.trackInfoString(tracks.getFirst()),
+                tracks.size()))
+            .queue();
+    }
+
+    private void addSingleTrackToQueue(
+        final Guild guild,
+        final AudioTrack track,
+        final VoiceChannel channel,
+        final SlashCommandInteractionEvent event
+    ) {
+        audioService.queue(guild, track);
+        channelService.joinChannel(channel);
+        event.getHook()
+            .sendMessage("Added '%s' to queue".formatted(Format.trackInfoString(track)))
+            .queue();
     }
 }

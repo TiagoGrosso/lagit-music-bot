@@ -19,7 +19,7 @@ public class TrackManager extends AudioEventAdapter {
         this.trackQueue = new InMemoryTrackQueue();
     }
 
-    public void queue(AudioTrack track) {
+    public void queue(final AudioTrack track) {
         trackQueue.queue(track);
         if (getCurrentTrack() == null) {
             playNext();

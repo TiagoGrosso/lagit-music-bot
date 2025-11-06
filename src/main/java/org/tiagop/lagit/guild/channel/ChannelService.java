@@ -1,9 +1,9 @@
-package org.tiagop.lagit.audio.manager;
+package org.tiagop.lagit.guild.channel;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
-import org.tiagop.lagit.audio.manager.guild.GuildService;
+import org.tiagop.lagit.guild.GuildService;
 
 @ApplicationScoped
 public class ChannelService {

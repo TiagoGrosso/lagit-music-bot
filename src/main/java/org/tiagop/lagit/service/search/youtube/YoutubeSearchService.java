@@ -35,7 +35,7 @@ public class YoutubeSearchService implements SearchClient {
             .toList();
     }
 
-    private static List<TrackInfo> extractTracks(JsonNode root) {
+    private static List<TrackInfo> extractTracks(final JsonNode root) {
         final var maybeItems =
             root.at("/contents/tabbedSearchResultsRenderer/tabs/0/tabRenderer/content/sectionListRenderer/contents")
                 .valueStream()
@@ -91,10 +91,5 @@ public class YoutubeSearchService implements SearchClient {
         String title,
         String artist
     ) {
-        public TrackInfo(String videoId, String title, String artist) {
-            this.videoId = videoId;
-            this.title = title;
-            this.artist = artist;
-        }
     }
 }

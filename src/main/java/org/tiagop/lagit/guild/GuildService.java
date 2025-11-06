@@ -1,4 +1,4 @@
-package org.tiagop.lagit.audio.manager.guild;
+package org.tiagop.lagit.guild;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import jakarta.enterprise.context.ApplicationScoped;
