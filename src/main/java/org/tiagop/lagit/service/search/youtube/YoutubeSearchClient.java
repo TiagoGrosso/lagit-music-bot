@@ -16,7 +16,7 @@ public interface YoutubeSearchClient {
     JsonNode getSuggestions(MusicSuggestionsRequestBody body);
 
     record MusicSuggestionsRequestBody(Context context, String query) {
-        public MusicSuggestionsRequestBody(String query) {
+        public MusicSuggestionsRequestBody(final String query) {
             this(new Context(new Context.Client("WEB_REMIX", "1.20220328.01.00")), query);
         }
 

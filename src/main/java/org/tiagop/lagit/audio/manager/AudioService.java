@@ -4,7 +4,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
 import net.dv8tion.jda.api.entities.Guild;
-import org.tiagop.lagit.audio.manager.guild.GuildService;
+import org.tiagop.lagit.guild.GuildService;
 
 @ApplicationScoped
 

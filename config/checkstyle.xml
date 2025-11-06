@@ -29,6 +29,8 @@
         <module name="OuterTypeFilename"/>
         <module name="UnusedImports"/>
         <module name="AvoidStarImport"/>
+        <module name="FinalParameters"/>
+        <module name="FinalLocalVariable"/>
         <module name="OneTopLevelClass"/>
         <module name="NoLineWrap">
             <property name="tokens" value="PACKAGE_DEF, IMPORT, STATIC_IMPORT"/>

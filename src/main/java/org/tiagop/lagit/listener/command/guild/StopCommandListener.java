@@ -4,8 +4,8 @@ import jakarta.enterprise.context.Dependent;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.tiagop.lagit.audio.manager.AudioService;
-import org.tiagop.lagit.audio.manager.ChannelService;
 import org.tiagop.lagit.command.StopCommand;
+import org.tiagop.lagit.guild.channel.ChannelService;
 
 @Dependent
 public class StopCommandListener extends AbstractGuildCommandListener<StopCommand.Data, StopCommand> {
