@@ -98,6 +98,11 @@ public class TrackManager extends AudioEventAdapter {
     }
 
     @Override
+    public void onPlayerPause(final AudioPlayer player) {
+        registerInactivity.accept(Instant.now());
+    }
+
+    @Override
     public void onTrackEnd(final AudioPlayer player, final AudioTrack track, final AudioTrackEndReason endReason) {
         registerInactivity.accept(Instant.now());
         if (!endReason.mayStartNext) {

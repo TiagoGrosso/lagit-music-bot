@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.tuple.Pair;
 import org.tiagop.lagit.guild.GuildService;
 import org.tiagop.lagit.guild.channel.embeds.LeaveChannelForInactivityEmbed;
 
@@ -41,20 +42,21 @@ public class InactivityService {
             .collect(Collectors.toSet());
     }
 
-    @Scheduled(every = "1m")
+    @Scheduled(every = "10s")
     public void leaveChannelForInactiveGuilds(final ScheduledExecution execution) {
         final var inactiveGuilds = getInactiveGuilds(execution.getFireTime());
-        final var channelManagers = inactiveGuilds.stream()
-            .map(guildService::getChannelManager)
+        final var pairs = inactiveGuilds.stream()
+            .map(guild -> Pair.of(guild, guildService.getChannelManager(guild)))
             .collect(Collectors.toSet());
 
-        if (channelManagers.stream().anyMatch(Objects::isNull)) {
+        if (pairs.stream().map(Pair::getRight).anyMatch(Objects::isNull)) {
             throw new IllegalStateException("Some channel managers are null. This should never happen.");
         }
 
-        for (final var channelManager : channelManagers) {
-            channelManager.leaveChannel();
-            channelManager.sendMessageEmbed(new LeaveChannelForInactivityEmbed(INACTIVITY_TIME_LIMIT));
+        for (final var pair : pairs) {
+            pair.getRight().leaveChannel();
+            pair.getRight().sendMessageEmbed(new LeaveChannelForInactivityEmbed(INACTIVITY_TIME_LIMIT));
+            clearGuildInactivity(pair.getLeft());
         }
     }
 }
