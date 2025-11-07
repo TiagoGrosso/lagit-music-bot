@@ -232,7 +232,6 @@
                 <executions>
                     <execution>
                         <id>check</id>
-                        <phase>validate</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
