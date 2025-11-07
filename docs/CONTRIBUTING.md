@@ -3,6 +3,21 @@
 Please run `mvn clean install`/`./mvnw clean install` (or `quarkus build` if you have the Quarkus CLI installed) before
 opening a (non-draft) PR. It will run all the validations and tests that the CI requires.
 
+## Dev Mode
+
+You can use the [Quarkus Dev Mode](https://quarkus.io/guides/dev-mode-differences) during development one of these
+commands:
+
+* `quarkus dev` - if you have the [Quarkus Cli](https://quarkus.io/guides/cli-tooling) installed
+* `mvn quarkus:dev` - if you have Maven install
+* `./mvwn quarkus:dev`
+
+If you wish to skip checkstyle and spotbugs checks during your development/prototyping phase, you can use the
+`skip-check` maven profile. You cannot do so using the Quarkus CLi, so your options would be:
+
+* `mvn -Pskip-checks quarkus:dev`
+* `./mvwn -Pskip-checks quarkus:dev`
+
 ## Checkstyle
 
 This project uses [Checkstyle](https://checkstyle.sourceforge.io/) with a local configuration file for consistent
