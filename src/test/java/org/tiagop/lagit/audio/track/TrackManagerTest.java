@@ -17,7 +17,6 @@ import java.util.Random;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.tiagop.lagit.guild.channel.ChannelManager;
 
 class TrackManagerTest {
     private static final Random RANDOM = new Random();
@@ -28,7 +27,9 @@ class TrackManagerTest {
     @BeforeEach
     public void setup() {
         audioPlayer = spy(new DefaultAudioPlayerManager().createPlayer());
-        trackManager = new TrackManager(audioPlayer, mock());
+        trackManager = new TrackManager(audioPlayer, mock(), () -> {
+        }, (ign) -> {
+        });
         clearInvocations(audioPlayer);
     }
 
