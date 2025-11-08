@@ -56,6 +56,9 @@ public class TrackManager extends AudioEventAdapter {
             audioPlayer.setPaused(false);
             return;
         }
+        if (getCurrentTrack() != null) {
+            return;
+        }
         playNext();
     }
 

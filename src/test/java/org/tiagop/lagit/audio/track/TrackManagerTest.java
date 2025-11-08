@@ -25,7 +25,7 @@ class TrackManagerTest {
     private TrackManager trackManager;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         audioPlayer = spy(new DefaultAudioPlayerManager().createPlayer());
         trackManager = new TrackManager(audioPlayer, mock(), () -> {
         }, (ign) -> {
@@ -34,7 +34,7 @@ class TrackManagerTest {
     }
 
     @Test
-    public void itLoadsTracks() {
+    void itLoadsTracks() {
         // given
         final var firstRequest = testRequest();
         final var secondRequest = testRequest();
@@ -49,7 +49,7 @@ class TrackManagerTest {
     }
 
     @Test
-    public void itClearsQueue() {
+    void itClearsQueue() {
         // given
         final var firstRequest = testRequest();
         final var secondRequest = testRequest();
@@ -65,17 +65,19 @@ class TrackManagerTest {
     }
 
     @Test
-    public void itDoesNotPlayOnNoTrack() {
+    void itDoesNotPlayOnNoTrack() {
         // given / when
         trackManager.resumeOrPlayNext();
 
         // then
         verify(audioPlayer).isPaused();
+        verify(audioPlayer).getPlayingTrack();
         verifyNoMoreInteractions(audioPlayer);
+        assertThat(trackManager.getCurrentTrack()).isNull();
     }
 
     @Test
-    public void itPlaysQueuedSong() {
+    void itPlaysQueuedSong() {
         // given
         final var firstRequest = testRequest();
         final var secondRequest = testRequest();
@@ -90,7 +92,7 @@ class TrackManagerTest {
     }
 
     @Test
-    public void itSkipsOneSong() {
+    void itSkipsOneSong() {
         // given
         final var firstRequest = testRequest();
         final var secondRequest = testRequest();
@@ -105,6 +107,71 @@ class TrackManagerTest {
         // then
         assertThat(trackManager.getCurrentTrack()).isEqualTo(secondRequest.track());
         assertThat(trackManager.getQueue()).containsExactly(thirdRequest);
+    }
+
+    @Test
+    void itPausesPlaying() {
+        // given
+        final var firstRequest = testRequest();
+
+        // when
+        trackManager.queue(firstRequest);
+        trackManager.pause();
+
+        // then
+        assertThat(trackManager.getCurrentTrack()).isEqualTo(firstRequest.track());
+        assertThat(audioPlayer.isPaused()).isTrue();
+    }
+
+    @Test
+    void itResumesPlaying() {
+        // given
+        final var firstRequest = testRequest();
+        final var secondRequest = testRequest();
+
+        // when
+        trackManager.queue(firstRequest);
+        trackManager.queue(secondRequest);
+        trackManager.pause();
+        trackManager.resumeOrPlayNext();
+
+        // then
+        assertThat(trackManager.getCurrentTrack()).isEqualTo(firstRequest.track());
+        assertThat(trackManager.getQueue()).containsExactly(secondRequest);
+        assertThat(audioPlayer.isPaused()).isFalse();
+    }
+
+    @Test
+    void itPlaysNextSong() {
+        // given
+        final var firstRequest = testRequest();
+        final var secondRequest = testRequest();
+
+        // when
+        trackManager.queue(firstRequest);
+        trackManager.queue(secondRequest);
+        trackManager.stop();
+        trackManager.resumeOrPlayNext();
+
+        // then
+        assertThat(trackManager.getCurrentTrack()).isEqualTo(secondRequest.track());
+        assertThat(trackManager.getQueue()).isEmpty();
+    }
+
+    @Test
+    void itDoesNothingIfAlreadyPlaying() {
+        // given
+        final var firstRequest = testRequest();
+        final var secondRequest = testRequest();
+
+        // when
+        trackManager.queue(firstRequest);
+        trackManager.queue(secondRequest);
+        trackManager.resumeOrPlayNext();
+
+        // then
+        assertThat(trackManager.getCurrentTrack()).isEqualTo(firstRequest.track());
+        assertThat(trackManager.getQueue()).containsExactly(secondRequest);
     }
 
     private static TrackRequest testRequest() {
