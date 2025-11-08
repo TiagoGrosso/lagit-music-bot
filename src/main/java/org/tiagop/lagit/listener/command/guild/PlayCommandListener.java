@@ -103,7 +103,7 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
         final List<AudioTrack> tracks
     ) {
         for (final var track : tracks) {
-            guildService.getTrackManager(guild).queue(new TrackRequest(track, event.getUser().getAsTag()));
+            guildService.getTrackManager(guild).queue(new TrackRequest(track, event.getUser().getAsMention()));
         }
         guildService.getChannelManager(guild).joinChannel(channel);
         event.getHook()
@@ -119,7 +119,7 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
         final VoiceChannel channel,
         final SlashCommandInteractionEvent event
     ) {
-        guildService.getTrackManager(guild).queue(new TrackRequest(track, event.getUser().getAsTag()));
+        guildService.getTrackManager(guild).queue(new TrackRequest(track, event.getUser().getAsMention()));
         guildService.getChannelManager(guild).joinChannel(channel);
         event.getHook()
             .sendMessage("Added '%s' to queue".formatted(Format.trackInfoString(track)))
