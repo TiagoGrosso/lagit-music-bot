@@ -1,13 +1,11 @@
 package org.tiagop.lagit.listener.command.guild;
 
 import jakarta.enterprise.context.Dependent;
-import java.util.stream.Collectors;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.tiagop.lagit.audio.track.TrackRequest;
 import org.tiagop.lagit.command.option.QueueCommand;
 import org.tiagop.lagit.guild.GuildService;
-import org.tiagop.lagit.util.Format;
+import org.tiagop.lagit.guild.channel.embeds.QueueEmbed;
 
 @Dependent
 public class QueueCommandListener extends AbstractGuildCommandListener<QueueCommand.Data, QueueCommand> {
@@ -34,11 +32,7 @@ public class QueueCommandListener extends AbstractGuildCommandListener<QueueComm
             event.reply("Queue is empty").queue();
             return;
         }
-        final var queueInfo = queue.stream()
-            .map(TrackRequest::track)
-            .map(Format::trackInfoString)
-            .map("1. %s"::formatted)
-            .collect(Collectors.joining("\n"));
-        event.reply(queueInfo).queue();
+        final var current = trackManager.getCurrentTrack();
+        event.replyEmbeds(new QueueEmbed(current, queue).toMessageEmbed()).queue();
     }
 }
