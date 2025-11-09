@@ -19,10 +19,14 @@ public final class Format {
         );
     }
 
+    public static String trackInfoUrl(final AudioTrack track) {
+        return "[%s](%s)".formatted(trackInfoString(track), track.getInfo().uri);
+    }
+
     private static String trimYoutubeTopic(final String author) {
         if (!author.endsWith("- Topic")) {
             return author;
         }
-        return StringUtils.substringBeforeLast(author, "- Topic");
+        return StringUtils.substringBeforeLast(author, "- Topic").trim();
     }
 }

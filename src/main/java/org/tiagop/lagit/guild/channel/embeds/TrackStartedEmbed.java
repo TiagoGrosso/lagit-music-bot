@@ -19,7 +19,7 @@ public record TrackStartedEmbed(
             .setColor(Color.GREEN)
             .setThumbnail(trackInfo.artworkUrl)
             .setTitle("Now playing \uD83D\uDCBF")
-            .setDescription("[%s](%s)".formatted(Format.trackInfoString(track), trackInfo.uri))
+            .setDescription(Format.trackInfoUrl(track))
             .addField("Requested by:", trackRequest.requestedBy(), false)
             .setFooter("Source: %s".formatted(sourceName)).build();
     }
