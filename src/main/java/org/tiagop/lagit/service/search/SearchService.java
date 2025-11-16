@@ -5,6 +5,7 @@ import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Comparator;
 import java.util.List;
+import org.tiagop.lagit.service.search.client.SearchClient;
 
 @ApplicationScoped
 public class SearchService {
@@ -18,9 +19,9 @@ public class SearchService {
     @CacheResult(cacheName = "search")
     public List<SearchResult> search(final String query) {
         return searchClients.stream()
-            .map(c -> c.search(query))
-            .flatMap(List::stream)
-            .sorted(Comparator.comparing(SearchResult::type).thenComparing(SearchResult::name))
+            .flatMap(c -> c.search(query).stream().limit(10))
+            .limit(25)
+            .sorted(Comparator.comparing(r -> r.source().ordinal()))
             .toList();
     }
 }

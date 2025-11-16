@@ -5,7 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import dev.lavalink.youtube.YoutubeSourceOptions;
-import dev.lavalink.youtube.clients.Music;
+import dev.lavalink.youtube.clients.MusicWithThumbnail;
 import dev.lavalink.youtube.clients.WebEmbeddedWithThumbnail;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
@@ -33,6 +33,6 @@ public class AudioPlayerManagerProducer {
         final var options = new YoutubeSourceOptions()
             .setRemoteCipher("https://cipher.kikkia.dev/", null, null)
             .setAllowSearch(true);
-        return new YoutubeAudioSourceManager(options, new WebEmbeddedWithThumbnail(), new Music());
+        return new YoutubeAudioSourceManager(options, new WebEmbeddedWithThumbnail(), new MusicWithThumbnail());
     }
 }

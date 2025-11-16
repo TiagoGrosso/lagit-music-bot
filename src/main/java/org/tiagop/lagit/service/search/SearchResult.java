@@ -3,52 +3,25 @@ package org.tiagop.lagit.service.search;
 import org.apache.commons.lang3.StringUtils;
 
 public record SearchResult(
-    Source source,
+    SearchSource source,
     String artist,
-    String name,
-    Type type,
+    String title,
     String id
 ) {
 
-    public enum Source {
-        YOUTUBE("Youtube", "ytmsearch");
-
-        private final String sourceName;
-        private final String searchPrefix;
-
-        Source(final String sourceName, final String searchPrefix) {
-            this.sourceName = sourceName;
-            this.searchPrefix = searchPrefix;
-        }
-
-        public String getSearchPrefix() {
-            return searchPrefix;
-        }
-
-        public String getSourceName() {
-            return sourceName;
-        }
-    }
-
-    public enum Type {
-        SINGLE,
-        ALBUM,
-        PLAYLIST,
-        UNKNOWN
-    }
+    public static final String CHOICE_NAME_FORMAT = "[%s] %s - %s";
 
     public String choiceName() {
         return StringUtils.truncate(
-            "[%s] %s - %s%s".formatted(
-                source.sourceName,
+            CHOICE_NAME_FORMAT.formatted(
+                source.getSourceName(),
                 StringUtils.truncate(artist, 20),
-                StringUtils.truncate(name, 50),
-                type == Type.UNKNOWN ? "" : " (" + type + ") "),
+                StringUtils.truncate(title, 50)),
             100);
     }
 
     public String choiceValue() {
-        return "%s: %s".formatted(source.searchPrefix, name);
+        return id;
     }
 
 }
