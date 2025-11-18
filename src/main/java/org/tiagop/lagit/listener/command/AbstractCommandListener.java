@@ -21,7 +21,12 @@ public abstract class AbstractCommandListener<D, C extends AbstractCommand<D>>
             Log.debugf("Ignoring command %s", event.getName());
             return;
         }
-        handleCommand(event, command.parseData(event));
+        try {
+            handleCommand(event, command.parseData(event));
+        } catch (final Exception e) {
+            Log.errorf(e, "Error processing command '%s'", event.getName());
+            event.getHook().sendMessage("Error processing command").queue();
+        }
     }
 
     protected abstract void handleCommand(final SlashCommandInteractionEvent event, final D data);

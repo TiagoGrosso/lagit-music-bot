@@ -1,15 +1,14 @@
 package org.tiagop.lagit.service.search;
 
 public enum SearchSource {
-    YOUTUBE("Youtube");
+    YOUTUBE("Youtube", 1),
+    SPOTIFY("Spotify", 2);
 
-    private final String sourceName;
+    public final String sourceName;
+    public final int priority;
 
-    SearchSource(final String sourceName) {
+    SearchSource(final String sourceName, final int priority) {
         this.sourceName = sourceName;
-    }
-
-    public String getSourceName() {
-        return sourceName;
+        this.priority = priority;
     }
 }

@@ -14,7 +14,7 @@ public record SearchResult(
     public String choiceName() {
         return StringUtils.truncate(
             CHOICE_NAME_FORMAT.formatted(
-                source.getSourceName(),
+                source.sourceName,
                 StringUtils.truncate(artist, 20),
                 StringUtils.truncate(title, 50)),
             100);

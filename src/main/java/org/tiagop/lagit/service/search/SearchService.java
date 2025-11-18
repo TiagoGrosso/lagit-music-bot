@@ -21,7 +21,7 @@ public class SearchService {
         return searchClients.stream()
             .flatMap(c -> c.search(query).stream().limit(10))
             .limit(25)
-            .sorted(Comparator.comparing(r -> r.source().ordinal()))
+            .sorted(Comparator.comparingInt(r -> -r.source().priority))
             .toList();
     }
 }

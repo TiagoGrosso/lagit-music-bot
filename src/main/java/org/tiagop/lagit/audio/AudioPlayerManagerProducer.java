@@ -3,21 +3,28 @@ package org.tiagop.lagit.audio;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
-import dev.lavalink.youtube.YoutubeAudioSourceManager;
-import dev.lavalink.youtube.YoutubeSourceOptions;
-import dev.lavalink.youtube.clients.MusicWithThumbnail;
-import dev.lavalink.youtube.clients.WebEmbeddedWithThumbnail;
+import io.quarkus.arc.All;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
+import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+import org.tiagop.lagit.audio.sources.SourceManagerProvider;
 
 @ApplicationScoped
 public class AudioPlayerManagerProducer {
     private final AudioPlayerManager playerManager;
 
     @SuppressWarnings("deprecation")
-    public AudioPlayerManagerProducer() {
+    public AudioPlayerManagerProducer(@All final List<SourceManagerProvider> sourceManagerProviders) {
         this.playerManager = new DefaultAudioPlayerManager();
-        playerManager.registerSourceManager(youtubeAudioSourceManager());
+
+        for (final var sourceManagerProvider : sourceManagerProviders) {
+            final var sourceManager = sourceManagerProvider.getSourceManager(playerManager);
+            Log.infof("Registering source manager for %s", StringUtils.capitalize(sourceManager.getSourceName()));
+            playerManager.registerSourceManager(sourceManager);
+        }
+
         AudioSourceManagers.registerRemoteSources(
             playerManager,
             com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class
@@ -27,12 +34,5 @@ public class AudioPlayerManagerProducer {
     @Produces
     public AudioPlayerManager getAudioPlayerManager() {
         return playerManager;
-    }
-
-    private static YoutubeAudioSourceManager youtubeAudioSourceManager() {
-        final var options = new YoutubeSourceOptions()
-            .setRemoteCipher("https://cipher.kikkia.dev/", null, null)
-            .setAllowSearch(true);
-        return new YoutubeAudioSourceManager(options, new WebEmbeddedWithThumbnail(), new MusicWithThumbnail());
     }
 }
