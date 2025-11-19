@@ -5,6 +5,7 @@ import static com.github.topi314.lavasearch.result.AudioSearchResult.Type.TRACK;
 
 import com.github.topi314.lavasearch.SearchManager;
 import com.github.topi314.lavasrc.spotify.SpotifyAudioPlaylist;
+import com.github.topi314.lavasrc.spotify.SpotifyAudioTrack;
 import com.github.topi314.lavasrc.spotify.SpotifySourceManager;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
@@ -34,6 +35,7 @@ public class SpotifySearchClient implements SearchClient {
             return List.of();
         }
         final var trackStream = result.getTracks().stream()
+            .map(track -> (SpotifyAudioTrack) track)
             .map(SearchResult::of)
             .limit(5);
         final var albumStream = result.getAlbums().stream()

@@ -1,8 +1,8 @@
 package org.tiagop.lagit.service.search;
 
 import com.github.topi314.lavasrc.spotify.SpotifyAudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import java.util.Locale;
+import com.github.topi314.lavasrc.spotify.SpotifyAudioTrack;
+import dev.lavalink.youtube.track.YoutubeAudioTrack;
 import org.apache.commons.lang3.StringUtils;
 
 public record SearchResult(
@@ -29,13 +29,23 @@ public record SearchResult(
         return id;
     }
 
-    public static SearchResult of(final AudioTrack track) {
+    public static SearchResult of(final YoutubeAudioTrack track) {
         return new SearchResult(
-            SearchSource.valueOf(track.getSourceManager().getSourceName().toUpperCase(Locale.ROOT)),
+            SearchSource.YOUTUBE,
             Type.TRACK,
             track.getInfo().author,
             track.getInfo().title,
             track.getIdentifier()
+        );
+    }
+
+    public static SearchResult of(final SpotifyAudioTrack track) {
+        return new SearchResult(
+            SearchSource.SPOTIFY,
+            Type.TRACK,
+            track.getInfo().author,
+            track.getInfo().title,
+            track.getInfo().uri
         );
     }
 
