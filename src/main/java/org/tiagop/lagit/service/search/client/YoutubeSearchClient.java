@@ -1,7 +1,8 @@
 package org.tiagop.lagit.service.search.client;
 
-import static org.tiagop.lagit.service.search.SearchSource.YOUTUBE;
-
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
 import org.tiagop.lagit.service.search.SearchResult;
@@ -9,17 +10,23 @@ import org.tiagop.lagit.service.search.SearchResult;
 @ApplicationScoped
 public class YoutubeSearchClient implements SearchClient {
 
-    private final TrackSearcher trackSearcher;
+    private final AudioPlayerManager playerManager;
 
-    public YoutubeSearchClient(final TrackSearcher trackSearcher) {
-        this.trackSearcher = trackSearcher;
+    public YoutubeSearchClient(final AudioPlayerManager playerManager) {
+        this.playerManager = playerManager;
     }
 
     @Override
     public List<SearchResult> search(final String query) {
-        final var tracks = trackSearcher.search("ytmsearch", query);
+        final var searchResult = playerManager.loadItemSync("ytmsearch: %s".formatted(query));
+        final var tracks = switch (searchResult) {
+            case AudioTrack track -> List.of(track);
+            case AudioPlaylist playlist -> playlist.getTracks();
+            case null, default -> List.<AudioTrack>of();
+        };
         return tracks.stream()
-            .map(t -> new SearchResult(YOUTUBE, t.getInfo().author, t.getInfo().title, t.getIdentifier()))
+            .map(SearchResult::of)
+            .limit(5)
             .toList();
     }
 }
