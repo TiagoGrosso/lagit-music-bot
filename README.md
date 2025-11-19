@@ -1,20 +1,26 @@
-# Lagit Music Bot
-
-A Self-Hostable Discord Music Bot built with [Discord-JDA](https://jda.wiki/introduction/jda/)
-and [Quarkus](https://quarkus.io/).
 
 ![Docker Pulls](https://img.shields.io/docker/pulls/tiagopgrosso/lagit-music-bot?label=Docker%20Pulls)
 ![GitHub Release](https://img.shields.io/github/v/release/tiagogrosso/lagit-music-bot?label=Version)
 ![License](https://img.shields.io/badge/License-MIT-white)
 
-## Using the Bot
+A Self-Hostable Discord Music Bot built with [Discord-JDA](https://jda.wiki/introduction/jda/)
+and [Quarkus](https://quarkus.io/)
+
+# Running the bot
+
+Check the [Running the bot with Docker](docs/Running.md) docs for instructions and examples of how to run the bot.
+
+Also check the [Installing the bot on a server](./docs/Bot.md#installing-the-bot-on-a-server) to have the bot join your
+server.
+
+# Using the Bot
 
 Simply use the `/play` command to add songs to the queue. The bot will join your voice channel and start playing
 whatever you asked it to play!
 
 Check below for the list of all available commands:
 
-### Commands
+## Commands
 
 Currently supported commands are:
 
@@ -33,7 +39,7 @@ Currently supported commands are:
 - `/pause`
     - Pauses the current song
 
-### Supported Sources
+## Supported Sources
 
 |     Source     |            Enabled by Default?             |     Search      |
 |:--------------:|:------------------------------------------:|:---------------:|
@@ -45,7 +51,7 @@ Currently supported commands are:
 | Twitch Streams |                    Yes                     |       N/A       |
 |   HTTP URLs    |                    Yes                     |       N/A       |
 
-#### Spotify
+### Spotify
 
 To enable the Spotify source, you need to provide a Spotify Client Id and Spotify Client Secret when running the bot.
 Check the [Spotify for Developers documentation](https://developer.spotify.com/documentation/web-api/concepts/apps) to
@@ -57,12 +63,5 @@ the tracks in them will be added to the queue individually.
 
 > [!IMPORTANT]
 >
-> The Bot doesn't play from Spotify directly, it finds a mirror for each track. In the vast majority of cases this is > not an
-> issue, but it's possible that a track that exists on Spotify is not found when trying to get a mirror for it.
-
-## Running the bot
-
-Check the [Running the bot with Docker](docs/Running.md) docs for instructions and examples of how to run the bot.
-
-Also check the [Installing the bot on a server](./docs/Bot.md#installing-the-bot-on-a-server) to have the bot join your
-server.
+> The Bot doesn't play from Spotify directly, it finds a mirror for each track. In the vast majority of cases this is
+> not an issue, but it's possible that a track that exists on Spotify is not found when trying to get a mirror for it.

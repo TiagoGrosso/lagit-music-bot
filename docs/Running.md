@@ -2,7 +2,7 @@
 
 This bot is distributed as a docker image in
 the [tiagopgrosso/lagit-music-bot repo](https://hub.docker.com/repository/docker/tiagopgrosso/lagit-music-bot/general).
-**As such you are required to have [Docker](https://www.docker.com/get-started/) installed** [¹](docs/Running.md)
+**As such you are required to have [Docker](https://www.docker.com/get-started/) installed** [¹](#docker-alternatives)
 
 To run it, you'll need to get a Discord Token. Check the [Getting a Token](./docs/Bot.md#getting-a-token) docs for
 information on how to get one.
