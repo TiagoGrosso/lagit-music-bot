@@ -3,6 +3,7 @@ package org.tiagop.lagit.service.search.client;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import dev.lavalink.youtube.track.YoutubeAudioTrack;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
 import org.tiagop.lagit.service.search.SearchResult;
@@ -25,6 +26,7 @@ public class YoutubeSearchClient implements SearchClient {
             case null, default -> List.<AudioTrack>of();
         };
         return tracks.stream()
+            .map(track -> (YoutubeAudioTrack) track)
             .map(SearchResult::of)
             .limit(5)
             .toList();
