@@ -21,7 +21,7 @@ Currently supported commands are:
 - `/play [query]`
     - Plays the song passed in the `query` parameter:
         - Supports autocomplete, just type something in and wait for the suggestions
-        - You can also simply paste a link from any of the supported sources
+        - You can also paste a link from any of the supported sources (e.g a link for a YouTube video or a Twitch Stream)
     - If `query` is not provided, it will attempt to resume playing a paused song
 - `/stop`
     - Stops the current song and leaves the channel
@@ -50,6 +50,15 @@ Currently supported commands are:
 To enable the Spotify source, you need to provide a Spotify Client Id and Spotify Client Secret when running the bot.
 Check the [Spotify for Developers documentation](https://developer.spotify.com/documentation/web-api/concepts/apps) to
 find out how to get them.
+
+You can use `/play` with links to Spotify tracks, albums and playlist, e.
+`/play https://open.spotify.com/album/4SD2UxRO9OgeSCQK0PN7cC?si=r1hnaOZ1Tzi3GvbhpalGdw`. For albums and playlists, all
+the tracks in them will be added to the queue individually.
+
+> [!IMPORTANT]
+>
+> The Bot doesn't play from Spotify directly, it finds a mirror for each track. In the vast majority of cases this is > not an
+> issue, but it's possible that a track that exists on Spotify is not found when trying to get a mirror for it.
 
 ## Running the bot
 
