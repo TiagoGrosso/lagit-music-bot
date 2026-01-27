@@ -20,7 +20,7 @@
         <youtube-source.version>1.17.0</youtube-source.version>
         <commons-validator.version>1.10.0</commons-validator.version>
         <commons-lang3.version>3.18.0</commons-lang3.version>
-        <assertj-core.version>3.27.6</assertj-core.version>
+        <assertj-core.version>3.27.7</assertj-core.version>
         <mockito-core.version>5.20.0</mockito-core.version>
 
         <compiler-plugin.version>3.14.0</compiler-plugin.version>
