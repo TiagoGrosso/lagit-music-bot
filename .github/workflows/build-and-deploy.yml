@@ -6,6 +6,8 @@ on:
 
 jobs:
   deploy:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -24,8 +26,8 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
+
       - name: Build Java project & run tests
-        if: steps.semantic.outputs.new-release-published == 'true'
         run: ./mvnw install
 
       - name: Run semantic-release
