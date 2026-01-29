@@ -8,6 +8,8 @@ jobs:
   deploy:
     permissions:
       contents: write
+      issues: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -31,6 +33,7 @@ jobs:
         run: ./mvnw install
 
       - name: Run semantic-release
+        id: semantic
         uses: codfish/semantic-release-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
