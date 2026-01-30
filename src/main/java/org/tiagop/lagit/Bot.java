@@ -6,11 +6,10 @@ import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.Startup;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
-import jakarta.enterprise.inject.Produces;
 import java.util.List;
 import java.util.stream.Collectors;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.tiagop.lagit.command.AbstractCommand;
 import org.tiagop.lagit.listener.AbstractListener;
@@ -20,36 +19,37 @@ import org.tiagop.lagit.listener.command.AbstractCommandListener;
 @ApplicationScoped
 public class Bot {
 
-    private final JDA jda;
+    private final ShardManager shardManager;
 
     public Bot(
         @All final List<AbstractListener<?>> listeners,
-        @ConfigProperty(name = "discord.token") final String token
+        @ConfigProperty(name = "discord.token") final String token,
+        @ConfigProperty(name = "discord.shards.total") final int shardsTotal,
+        @ConfigProperty(name = "discord.shards.ids") final List<Integer> shardIds
+
     ) {
         Log.info("Starting Lagit Music Bot");
-        jda = JDABuilder.createDefault(token)
+        shardManager = DefaultShardManagerBuilder.createDefault(token)
+            .setShardsTotal(shardsTotal)
+            .setShards(shardIds)
             .addEventListeners((Object[]) listeners.toArray(AbstractListener[]::new))
             .enableIntents(listeners.stream().flatMap(l -> l.getIntents().stream()).collect(Collectors.toSet()))
             .build();
 
-        Log.info("Registering %d commands".formatted(listeners.size()));
-
-        jda.updateCommands().addCommands(
-            listeners.stream()
+        shardManager.getShards()
+            .getFirst()
+            .updateCommands()
+            .addCommands(listeners.stream()
                 .filter(l -> l instanceof AbstractCommandListener<?, ?>)
                 .map(l -> (AbstractCommandListener<?, ?>) l)
                 .map(AbstractCommandListener::getCommand)
                 .map(AbstractCommand::toCommandData)
-                .collect(Collectors.toSet())
-        ).queue();
+                .peek(c -> Log.info("Found command: %s".formatted(c.getName())))
+                .collect(Collectors.toSet()))
+            .queue();
     }
 
     public void shutdown(@Observes final ShutdownEvent event) {
-        jda.shutdown();
-    }
-
-    @Produces
-    public JDA getJda() {
-        return jda;
+        shardManager.shutdown();
     }
 }
