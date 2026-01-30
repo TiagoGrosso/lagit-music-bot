@@ -32,6 +32,8 @@ public class Bot {
             .enableIntents(listeners.stream().flatMap(l -> l.getIntents().stream()).collect(Collectors.toSet()))
             .build();
 
+        Log.info("Registering %d commands".formatted(listeners.size()));
+
         jda.updateCommands().addCommands(
             listeners.stream()
                 .filter(l -> l instanceof AbstractCommandListener<?, ?>)
