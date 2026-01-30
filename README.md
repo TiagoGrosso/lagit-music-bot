@@ -65,3 +65,24 @@ the tracks in them will be added to the queue individually.
 >
 > The Bot doesn't play from Spotify directly, it finds a mirror for each track. In the vast majority of cases this is
 > not an issue, but it's possible that a track that exists on Spotify is not found when trying to get a mirror for it.
+
+### Sharding
+
+This bot supports sharding. To configure sharding, set the following environment variables:
+
+- `DISCORD_SHARDS_TOTAL`: The total number of shards to use. Should be set the same across all instances.
+- `DISCORD_SHARDS_IDS`: The shard ids to assign to the bot instance. Should not have any duplicates across instances.
+
+For example, if you want to run 3 instances of the bot, with a total of 10 shards, you can set the following environment
+variables:
+
+|            | DISCORD_SHARDS_TOTAL | DISCORD_SHARDS_IDS |
+|------------|----------------------|--------------------|
+| Instance 1 | 10                   | 0,3,6              |
+| Instance 2 | 10                   | 1,4,7              |
+| Instance 3 | 10                   | 2,5,8,9            |
+
+> [!TIP]
+>
+> Unless you know what you're doing, you should not need to configure sharding.
+> Sharding is not required to run the bot. It really only starts being needed for bots in more than 1000 guilds.
