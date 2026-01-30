@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install Node (needed by semantic-release)
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: 24
 
@@ -34,7 +34,7 @@ jobs:
 
       - name: Run semantic-release
         id: semantic
-        uses: codfish/semantic-release-action@v3
+        uses: codfish/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
