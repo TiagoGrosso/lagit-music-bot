@@ -9,6 +9,22 @@
       "automerge": true,
       "automergeType": "pr",
       "platformAutomerge": true
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "semanticCommitType": "ci",
+      "semanticCommitScope": "deps"
+    },
+    {
+      "matchDatasources": ["maven-wrapper"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "build"
+    },
+    {
+      "matchManagers": ["maven"],
+      "matchDepTypes": ["plugin"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "build"
     }
   ]
 }
