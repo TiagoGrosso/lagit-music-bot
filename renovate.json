@@ -25,6 +25,26 @@
       "matchDepTypes": ["plugin"],
       "semanticCommitType": "chore",
       "semanticCommitScope": "build"
+    },
+    {
+      "matchPackageNames": [
+        "com.puppycrawl.tools:checkstyle",
+        "com.github.spotbugs:*",
+        "com.google.errorprone:*",
+        "com.uber.nullaway:*",
+        "org.mockito:*",
+        "org.assertj:*"
+      ],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps-lint"
+    },
+    {
+      "matchPackageNames": [
+        "org.mockito:*",
+        "org.assertj:*"
+      ],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps-test"
     }
   ]
 }
