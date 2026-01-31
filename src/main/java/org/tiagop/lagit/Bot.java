@@ -1,5 +1,6 @@
 package org.tiagop.lagit;
 
+import club.minnced.discord.jdave.interop.JDaveSessionFactory;
 import io.quarkus.arc.All;
 import io.quarkus.logging.Log;
 import io.quarkus.runtime.ShutdownEvent;
@@ -9,6 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import java.util.List;
 import java.util.stream.Collectors;
+import net.dv8tion.jda.api.audio.AudioModuleConfig;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -28,7 +30,6 @@ public class Bot {
     @Nullable
     private ShardManager shardManager;
 
-    // CDI constructor: no exceptions possible
     public Bot(
         @All final List<AbstractListener<?>> listeners,
         @ConfigProperty(name = "discord.token") final String token,
@@ -47,6 +48,8 @@ public class Bot {
         shardManager = DefaultShardManagerBuilder.createDefault(token)
             .setShardsTotal(shardsTotal)
             .setShards(shardIds)
+            .setAudioModuleConfig(new AudioModuleConfig()
+                .withDaveSessionFactory(new JDaveSessionFactory()))
             .addEventListeners((Object[]) listeners.toArray(AbstractListener[]::new))
             .enableIntents(listeners.stream().flatMap(l -> l.getIntents().stream()).collect(Collectors.toSet()))
             .build();
