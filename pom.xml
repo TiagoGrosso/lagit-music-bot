@@ -26,7 +26,7 @@
         <compiler-plugin.version>3.14.1</compiler-plugin.version>
         <surefire-plugin.version>3.5.4</surefire-plugin.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
-        <checkstyle.version>13.0.0</checkstyle.version>
+        <checkstyle.version>13.1.0</checkstyle.version>
         <spotbugs-maven-plugin.version>4.9.8.2</spotbugs-maven-plugin.version>
         <error-prone.version>2.46.0</error-prone.version>
         <nullaway.version>0.13.1</nullaway.version>
