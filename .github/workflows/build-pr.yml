@@ -44,6 +44,8 @@ jobs:
           push: true
           tags: |
             ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.APP_NAME }}:pr-${{ github.event.number }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Comment PR
         uses: marocchino/sticky-pull-request-comment@v2

@@ -1,0 +1,5 @@
+services:
+  bot:
+    image: tiagopgrosso/lagit-music-bot
+    restart: unless-stopped
+    env_file: .env

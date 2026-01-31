@@ -42,7 +42,7 @@ And run with:
 docker run --env-file .env tiagopgrosso/lagit-music-bot
 ```
 
-Or reference it in the `docker-compose` file:
+Or reference it in the `docker-compose` file either directly for each variable:
 
 ```yml
 services:
@@ -54,6 +54,19 @@ services:
       - SPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID} # If you don't want to use spotify, remove this line
       - SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET} # If you don't want to use spotify, remove this line
 ```
+
+or by importing your `.env` file:
+
+```yml
+services:
+  bot:
+    image: tiagopgrosso/lagit-music-bot # optionally add ":X.Y.Z" for a specific version
+    restart: unless-stopped
+    env_file: .env # or any other .env file you want
+```
+
+A simple `docker-compose.yml` file is also provided in the root of the repo with this latest option alongside an
+.env-example file which you can copy and rename to .env.
 
 # Advanced
 

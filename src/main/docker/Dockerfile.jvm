@@ -78,10 +78,13 @@
 #   accessed directly. (example: "foo.example.com,bar.example.com")
 #
 ###
-FROM registry.access.redhat.com/ubi9/openjdk-25:1.24-2.1769595333
+FROM registry.access.redhat.com/ubi10/ubi:10.1
+USER root
+RUN dnf update -y && \
+    dnf install -y java-25-openjdk && \
+    dnf clean all
 
 ENV LANGUAGE='en_US:en'
-
 
 # We make four distinct layers so if there are application changes the library layers can be re-used
 COPY --chown=185 target/quarkus-app/lib/ /deployments/lib/
@@ -91,8 +94,8 @@ COPY --chown=185 target/quarkus-app/quarkus/ /deployments/quarkus/
 
 EXPOSE 8080
 USER 185
-ENV JAVA_OPTS_APPEND="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
+ENV JAVA_OPTS_APPEND="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager --enable-native-access=ALL-UNNAMED"
+# ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
 
-ENTRYPOINT [ "/opt/jboss/container/java/run/run-java.sh" ]
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS_APPEND -jar /deployments/quarkus-run.jar"]
 
