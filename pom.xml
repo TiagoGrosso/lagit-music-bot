@@ -6,7 +6,7 @@
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.release>25</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skipITs>true</skipITs>
@@ -106,7 +106,7 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-junit5</artifactId>
+            <artifactId>quarkus-junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -151,6 +151,7 @@
                         --add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
                         --add-opens jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED
                         --add-opens jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED
+                        --enable-native-access=ALL-UNNAMED
                     </jvmArgs>
                 </configuration>
             </plugin>
@@ -161,7 +162,7 @@
                     <parameters>true</parameters>
                     <compilerArgs>
                         <arg>-XDcompilePolicy=simple</arg>
-                        <arg>-XDaddTypeAnnotationsToSymbol=true</arg> <!-- TODO remove when upgrading to Java 22+ -->
+                        <arg>-XDaddTypeAnnotationsToSymbol=true</arg>
                         <arg>--should-stop=ifError=FLOW</arg>
                         <arg>-Xplugin:ErrorProne -XepOpt:NullAway:AnnotatedPackages=org.tiagop -Xep:NullAway:ERROR</arg>
                     </compilerArgs>
@@ -180,6 +181,17 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire-plugin.version}</version>
                 <configuration>
@@ -187,6 +199,7 @@
                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                         <maven.home>${maven.home}</maven.home>
                     </systemPropertyVariables>
+                    <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
                 </configuration>
             </plugin>
             <plugin>

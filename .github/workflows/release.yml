@@ -1,11 +1,11 @@
-name: Build And Deploy
+name: Release
 on:
-  push:
-    branches:
-      - master
+  schedule:
+    - cron: '0 * * * *' # Every hour
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  release:
     permissions:
       contents: write
       issues: write
@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
-          java-version: '21'
+          java-version: '25'
           cache: 'maven'
 
       - name: Build Java project & run tests
