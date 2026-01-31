@@ -53,14 +53,6 @@ jobs:
         if: steps.semantic.outputs.new-release-published == 'true'
         uses: docker/setup-buildx-action@v3
 
-      - name: Cache Docker layers (read-only)
-        if: steps.semantic.outputs.new-release-published == 'true'
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-cache
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
       - name: Build and push Docker image
         if: steps.semantic.outputs.new-release-published == 'true'
         uses: docker/build-push-action@v6
@@ -72,3 +64,5 @@ jobs:
           tags: |
             ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.APP_NAME }}:latest
             ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.APP_NAME }}:${{ steps.semantic.outputs.release-version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
