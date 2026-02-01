@@ -1,6 +1,7 @@
 package org.tiagop.lagit.listener.command;
 
 import io.quarkus.logging.Log;
+import jakarta.inject.Inject;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.tiagop.lagit.command.AbstractCommand;
 import org.tiagop.lagit.listener.AbstractListener;
@@ -8,11 +9,11 @@ import org.tiagop.lagit.listener.AbstractListener;
 public abstract class AbstractCommandListener<D, C extends AbstractCommand<D>>
     extends AbstractListener<SlashCommandInteractionEvent> {
 
-    private final C command;
+    @Inject
+    private C command;
 
-    protected AbstractCommandListener(final C command) {
+    protected AbstractCommandListener() {
         super(SlashCommandInteractionEvent.class);
-        this.command = command;
     }
 
     @Override
@@ -22,6 +23,7 @@ public abstract class AbstractCommandListener<D, C extends AbstractCommand<D>>
             return;
         }
         try {
+            event.getChannel().asTextChannel();
             handleCommand(event, command.parseData(event));
         } catch (final Exception e) {
             Log.errorf(e, "Error processing command '%s'", event.getName());

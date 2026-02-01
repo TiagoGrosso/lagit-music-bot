@@ -3,7 +3,7 @@ package org.tiagop.lagit.listener.command.guild;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
 import java.util.Optional;
 import net.dv8tion.jda.api.entities.Guild;
@@ -14,22 +14,16 @@ import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.tiagop.lagit.audio.track.TrackRequest;
 import org.tiagop.lagit.command.PlayCommand;
-import org.tiagop.lagit.guild.GuildService;
 import org.tiagop.lagit.util.Format;
 
-@Dependent
+@ApplicationScoped
 public class PlayCommandListener extends AbstractGuildCommandListener<PlayCommand.Data, PlayCommand> {
 
-    private final GuildService guildService;
     private final AudioPlayerManager audioPlayerManager;
 
     public PlayCommandListener(
-        final PlayCommand command,
-        final GuildService guildService,
         final AudioPlayerManager audioPlayerManager
     ) {
-        super(command);
-        this.guildService = guildService;
         this.audioPlayerManager = audioPlayerManager;
     }
 
