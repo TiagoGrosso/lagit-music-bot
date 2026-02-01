@@ -3,9 +3,18 @@
 Please run `mvn clean install`/`./mvnw clean install` (or `quarkus build` if you have the Quarkus CLI installed) before
 opening a (non-draft) PR. It will run all the validations and tests that the CI requires.
 
+## Conventional Commits
+
+This project follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0) spec for commit messages.
+This is mandatory and enforced by a check that runs during Pull Requests.
+
 ## Dev Mode
 
-You can use the [Quarkus Dev Mode](https://quarkus.io/guides/dev-mode-differences) during development one of these
+> ![IMPORTANT]
+> Running the bot, even locally, requires a Discord Token. The simplest way to provide it is via a `.env` file at the
+> root of the project. Check the [Running the Bot](./docs/Running.md) instructions for more details
+
+You can use the [Quarkus Dev Mode](https://quarkus.io/guides/dev-mode-differences) during development using one of these
 commands:
 
 * `quarkus dev` - if you have the [Quarkus Cli](https://quarkus.io/guides/cli-tooling) installed
@@ -13,7 +22,7 @@ commands:
 * `./mvwn quarkus:dev`
 
 If you wish to skip checkstyle and spotbugs checks during your development/prototyping phase, you can use the
-`skip-check` maven profile. You cannot do so using the Quarkus CLi, so your options would be:
+`skip-check` maven profile. You cannot do so using the Quarkus CLI, so your options would be:
 
 * `mvn -Pskip-checks quarkus:dev`
 * `./mvwn -Pskip-checks quarkus:dev`
@@ -57,3 +66,9 @@ the [Error Prone Installation Guide](https://errorprone.info/docs/installation).
 This project uses [NullAway](https://github.com/uber/NullAway) to detect potential Null Pointer Exceptions. By default,
 every field and method is non-nullable. If you wish it to be nullable, you have to annotate it with `@Nullable`. When
 building the project through Maven, you will get errors if you are trying to pass `null` to non-nullable fields.
+
+## Releases
+
+This project runs [Semantic Release](https://github.com/semantic-release/semantic-release) on an hourly basis. This
+means that, if there is any change that warrants a release (pretty much anything except docs, build updates and such),
+it will be picked up and released at the start of the next hour (UTC).
