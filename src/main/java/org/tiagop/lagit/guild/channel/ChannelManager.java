@@ -1,15 +1,20 @@
 package org.tiagop.lagit.guild.channel;
 
-import io.quarkus.logging.Log;
+import java.util.Optional;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.tiagop.lagit.audio.AudioPlayerSendHandler;
 import org.tiagop.lagit.guild.channel.embeds.Embed;
 
 public class ChannelManager {
     private final Guild guild;
     private final AudioManager guildAudioManager;
+    @Nullable
+    private TextChannel lastTextChannelUsed;
 
     public ChannelManager(
         final Guild guild,
@@ -33,12 +38,20 @@ public class ChannelManager {
     }
 
     public void sendMessageEmbed(final Embed embed) {
-        final var channels = guild.getTextChannels();
-        if (channels.isEmpty()) {
-            Log.warn("No text channels found for guild %s".formatted(guild.getName()));
-            return;
-        }
-        final var channel = channels.getFirst();
+        final var channel = Optional.ofNullable(lastTextChannelUsed)
+            .orElseGet(this::getFirstTextChannel);
         channel.sendMessageEmbeds(embed.toMessageEmbed()).queue();
+    }
+
+    public void setLastTextChannelUsed(@NonNull final TextChannel channel) {
+        this.lastTextChannelUsed = channel;
+    }
+
+    private TextChannel getFirstTextChannel() {
+        return guild.getTextChannels()
+            .stream()
+            .findFirst()
+            .orElseThrow(
+                () -> new IllegalStateException("No text channels found in guild %s".formatted(guild.getId())));
     }
 }
