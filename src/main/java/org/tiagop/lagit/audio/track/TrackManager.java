@@ -7,25 +7,25 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import java.time.Instant;
 import java.util.List;
 import java.util.function.Consumer;
-import org.tiagop.lagit.guild.channel.ChannelManager;
+import org.tiagop.lagit.guild.channel.PlayInfoManager;
 import org.tiagop.lagit.guild.channel.embeds.TrackStartedEmbed;
 
 public class TrackManager extends AudioEventAdapter {
 
     private final AudioPlayer audioPlayer;
     private final TrackQueue trackQueue;
-    private final ChannelManager channelManager;
+    private final PlayInfoManager playInfoManager;
     private final Runnable clearInactivity;
     private final Consumer<Instant> registerInactivity;
 
     public TrackManager(
         final AudioPlayer audioPlayer,
-        final ChannelManager channelManager,
+        final PlayInfoManager playInfoManager,
         final Runnable clearInactivity,
         final Consumer<Instant> registerInactivity
     ) {
         this.audioPlayer = audioPlayer;
-        this.channelManager = channelManager;
+        this.playInfoManager = playInfoManager;
         this.clearInactivity = clearInactivity;
         this.registerInactivity = registerInactivity;
         this.audioPlayer.addListener(this);
@@ -68,7 +68,7 @@ public class TrackManager extends AudioEventAdapter {
             return;
         }
         audioPlayer.playTrack(next.track());
-        channelManager.sendMessageEmbed(new TrackStartedEmbed(next));
+        playInfoManager.updatePlayInfo(new TrackStartedEmbed(next));
     }
 
     public void pause() {

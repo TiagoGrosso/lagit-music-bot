@@ -10,6 +10,7 @@ import org.tiagop.lagit.audio.AudioPlayerSendHandler;
 import org.tiagop.lagit.audio.track.TrackManager;
 import org.tiagop.lagit.guild.activity.InactivityService;
 import org.tiagop.lagit.guild.channel.ChannelManager;
+import org.tiagop.lagit.guild.channel.PlayInfoManager;
 
 @ApplicationScoped
 public class GuildService {
@@ -36,14 +37,16 @@ public class GuildService {
                 guild.getAudioManager(),
                 new AudioPlayerSendHandler(audioPlayer)
             );
+            final var playInfoManager = new PlayInfoManager(channelManager);
             return new GuildContext(
                 new TrackManager(
                     audioPlayer,
-                    channelManager,
+                    playInfoManager,
                     () -> inactivityService.clearGuildInactivity(guild.getId()),
                     (time) -> inactivityService.registerGuildInactivity(guild.getId(), time)
                 ),
-                channelManager
+                channelManager,
+                playInfoManager
             );
         });
     }
