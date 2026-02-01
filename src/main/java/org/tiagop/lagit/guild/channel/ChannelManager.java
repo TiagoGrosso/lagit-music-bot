@@ -1,10 +1,13 @@
 package org.tiagop.lagit.guild.channel;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
+import org.apache.commons.lang3.function.Consumers;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.tiagop.lagit.audio.AudioPlayerSendHandler;
@@ -38,9 +41,13 @@ public class ChannelManager {
     }
 
     public void sendMessageEmbed(final Embed embed) {
+        sendMessageEmbed(embed, Consumers.nop());
+    }
+
+    public void sendMessageEmbed(final Embed embed, final Consumer<Message> onSuccess) {
         final var channel = Optional.ofNullable(lastTextChannelUsed)
             .orElseGet(this::getFirstTextChannel);
-        channel.sendMessageEmbeds(embed.toMessageEmbed()).queue();
+        channel.sendMessageEmbeds(embed.toMessageEmbed()).queue(onSuccess);
     }
 
     public void setLastTextChannelUsed(@NonNull final TextChannel channel) {

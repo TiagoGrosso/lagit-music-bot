@@ -8,11 +8,14 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
 import java.util.List;
+import java.util.function.Consumer;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import org.apache.commons.lang3.function.Consumers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.tiagop.lagit.guild.channel.embeds.Embed;
@@ -44,7 +47,21 @@ class ChannelManagerTest {
 
         // then
         then(guild).shouldHaveNoMoreInteractions();
-        then(messageCreateAction).should().queue();
+        then(messageCreateAction).should().queue(Consumers.nop());
+    }
+
+    @Test
+    void sends_message_embed_with_callback() {
+        // given
+        channelManager.setLastTextChannelUsed(channel);
+        final Consumer<Message> callback = mock();
+
+        // when
+        channelManager.sendMessageEmbed(embed, callback);
+
+        // then
+        then(guild).shouldHaveNoMoreInteractions();
+        then(messageCreateAction).should().queue(callback);
     }
 
     @Test
@@ -58,7 +75,7 @@ class ChannelManagerTest {
         // then
         then(guild).should().getTextChannels();
         then(guild).shouldHaveNoMoreInteractions();
-        then(messageCreateAction).should().queue();
+        then(messageCreateAction).should().queue(Consumers.nop());
     }
 
     @Test
