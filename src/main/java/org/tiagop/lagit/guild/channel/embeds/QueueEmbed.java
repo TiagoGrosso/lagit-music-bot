@@ -1,6 +1,5 @@
 package org.tiagop.lagit.guild.channel.embeds;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import java.awt.Color;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,7 +10,7 @@ import org.tiagop.lagit.audio.track.TrackRequest;
 import org.tiagop.lagit.util.Format;
 
 public record QueueEmbed(
-    @Nullable AudioTrack current,
+    @Nullable TrackRequest current,
     List<TrackRequest> queue
 ) implements Embed {
     @Override
@@ -19,8 +18,9 @@ public record QueueEmbed(
         final var tracksDescription = queue.stream()
             .map(r -> "1. %s (%s)".formatted(Format.trackInfoUrl(r.track()), r.requestedBy()))
             .collect(Collectors.joining("\n"));
-        final var title =
-            current == null ? "Currently Stopped" : "Now playing: %s".formatted(Format.trackInfoString(current));
+        final var title = current == null
+            ? "Currently Stopped"
+            : "Now playing: %s".formatted(Format.trackInfoString(current.track()));
         final var builder = new EmbedBuilder()
             .setColor(Color.PINK)
             .setTitle(title)

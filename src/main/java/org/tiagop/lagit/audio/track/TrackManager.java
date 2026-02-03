@@ -7,8 +7,9 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import java.time.Instant;
 import java.util.List;
 import java.util.function.Consumer;
+import org.jspecify.annotations.Nullable;
 import org.tiagop.lagit.guild.channel.PlayInfoManager;
-import org.tiagop.lagit.guild.channel.embeds.TrackStartedEmbed;
+import org.tiagop.lagit.guild.channel.embeds.NowPlayingEmbed;
 
 public class TrackManager extends AudioEventAdapter {
 
@@ -17,6 +18,9 @@ public class TrackManager extends AudioEventAdapter {
     private final PlayInfoManager playInfoManager;
     private final Runnable clearInactivity;
     private final Consumer<Instant> registerInactivity;
+
+    @Nullable
+    private TrackRequest current;
 
     public TrackManager(
         final AudioPlayer audioPlayer,
@@ -34,9 +38,11 @@ public class TrackManager extends AudioEventAdapter {
 
     public void queue(final TrackRequest request) {
         trackQueue.queue(request);
-        if (getCurrentTrack() == null) {
+        if (current == null) {
             playNext();
+            return;
         }
+        playInfoManager.updatePlayInfo(new NowPlayingEmbed(current, getQueue().size()));
     }
 
     public void skip(final int num) {
@@ -52,40 +58,56 @@ public class TrackManager extends AudioEventAdapter {
     }
 
     public void resumeOrPlayNext() {
-        if (audioPlayer.isPaused()) {
+        if (audioPlayer.isPaused() && current != null) {
             audioPlayer.setPaused(false);
+            playInfoManager.updatePlayInfo(new NowPlayingEmbed(current, getQueue().size()));
             return;
         }
-        if (getCurrentTrack() != null) {
+        if (audioPlayer.getPlayingTrack() != null) {
             return;
         }
         playNext();
     }
 
     private void playNext() {
-        final var next = trackQueue.advance(1);
-        if (next == null) {
+        current = trackQueue.advance(1);
+        if (current == null) {
+            playInfoManager.updateOnQueueEnded();
             return;
         }
-        audioPlayer.playTrack(next.track());
-        playInfoManager.updatePlayInfo(new TrackStartedEmbed(next));
+        audioPlayer.playTrack(current.track());
+        playInfoManager.updatePlayInfo(new NowPlayingEmbed(current, getQueue().size()));
     }
 
     public void pause() {
+        if (current == null) {
+            return;
+        }
         audioPlayer.setPaused(true);
+        playInfoManager.updatePlayInfo(new NowPlayingEmbed(current, getQueue().size(), true));
     }
 
     public void stop() {
         audioPlayer.setPaused(false);
         audioPlayer.stopTrack();
+        final var queue = getQueue();
+        if (queue.isEmpty()) {
+            playInfoManager.updateOnQueueEnded();
+            return;
+        }
+        playInfoManager.updatePlayInfo(new NowPlayingEmbed(queue.getFirst(), queue.size(), true));
     }
 
     public void clear() {
         trackQueue.clear();
+        if (current != null) {
+            playInfoManager.updatePlayInfo(new NowPlayingEmbed(current, 0));
+        }
     }
 
-    public AudioTrack getCurrentTrack() {
-        return audioPlayer.getPlayingTrack();
+    @Nullable
+    public TrackRequest getCurrentTrack() {
+        return current;
     }
 
     // Listeners
