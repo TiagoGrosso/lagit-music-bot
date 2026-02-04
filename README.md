@@ -38,6 +38,8 @@ Currently supported commands are:
     - Displays all the queued songs
 - `/pause`
     - Pauses the current song
+- `/playing`
+    - Displays the currently playing song
 
 ## Supported Sources
 
