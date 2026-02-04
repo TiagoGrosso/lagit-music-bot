@@ -10,7 +10,7 @@ public abstract class AbstractCommandListener<D, C extends AbstractCommand<D>>
     extends AbstractListener<SlashCommandInteractionEvent> {
 
     @Inject
-    private C command;
+    C command;
 
     protected AbstractCommandListener() {
         super(SlashCommandInteractionEvent.class);

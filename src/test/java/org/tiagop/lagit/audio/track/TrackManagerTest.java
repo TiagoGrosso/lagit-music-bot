@@ -1,6 +1,5 @@
 package org.tiagop.lagit.audio.track;
 
-import static org.apache.commons.lang3.RandomStringUtils.secure;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
@@ -13,9 +12,6 @@ import static org.mockito.Mockito.times;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
-import com.sedmelluq.discord.lavaplayer.track.BaseAudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.playback.LocalAudioTrackExecutor;
 import java.time.Instant;
 import java.util.Random;
 import java.util.UUID;
@@ -107,9 +103,7 @@ class TrackManagerTest {
         final var firstRequest = testRequest();
         final var secondRequest = testRequest();
         final var thirdRequest = testRequest();
-        trackManager.queue(firstRequest);
-        trackManager.queue(secondRequest);
-        trackManager.queue(thirdRequest);
+        trackManager.queue(firstRequest, secondRequest, thirdRequest);
 
         // when
         trackManager.skip(1);
@@ -120,8 +114,6 @@ class TrackManagerTest {
         assertThat(trackManager.getQueue()).containsExactly(thirdRequest);
 
         final var inOrder = inOrder(playInfoManager);
-        then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 0));
-        then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 1));
         then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 2));
         then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(secondRequest, 1));
         then(playInfoManager).shouldHaveNoMoreInteractions();
@@ -163,8 +155,7 @@ class TrackManagerTest {
         final var secondRequest = testRequest();
 
         // when
-        trackManager.queue(firstRequest);
-        trackManager.queue(secondRequest);
+        trackManager.queue(firstRequest, secondRequest);
         trackManager.pause();
         trackManager.resumeOrPlayNext();
 
@@ -174,7 +165,6 @@ class TrackManagerTest {
         assertThat(audioPlayer.isPaused()).isFalse();
 
         final var inOrder = inOrder(playInfoManager);
-        then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 0));
         then(playInfoManager).should(inOrder, times(1)).updatePlayInfo(new NowPlayingEmbed(firstRequest, 1));
         then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 1, true));
         then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 1));
@@ -188,8 +178,7 @@ class TrackManagerTest {
         final var secondRequest = testRequest();
 
         // when
-        trackManager.queue(firstRequest);
-        trackManager.queue(secondRequest);
+        trackManager.queue(firstRequest, secondRequest);
         trackManager.stop();
         trackManager.resumeOrPlayNext();
 
@@ -198,7 +187,6 @@ class TrackManagerTest {
         assertThat(trackManager.getQueue()).isEmpty();
 
         final var inOrder = inOrder(playInfoManager);
-        then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 0));
         then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 1));
         then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(secondRequest, 1, true)); // stop
         then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(secondRequest, 0)); // resume
@@ -212,8 +200,7 @@ class TrackManagerTest {
         final var secondRequest = testRequest();
 
         // when
-        trackManager.queue(firstRequest);
-        trackManager.queue(secondRequest);
+        trackManager.queue(firstRequest, secondRequest);
         trackManager.resumeOrPlayNext();
 
         // then
@@ -221,7 +208,6 @@ class TrackManagerTest {
         assertThat(trackManager.getQueue()).containsExactly(secondRequest);
 
         final var inOrder = inOrder(playInfoManager);
-        then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 0));
         then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 1));
         then(playInfoManager).shouldHaveNoMoreInteractions();
     }
@@ -233,10 +219,7 @@ class TrackManagerTest {
         final var secondRequest = testRequest();
         final var thirdRequest = testRequest();
         final var fourthRequest = testRequest();
-        trackManager.queue(firstRequest);
-        trackManager.queue(secondRequest);
-        trackManager.queue(thirdRequest);
-        trackManager.queue(fourthRequest);
+        trackManager.queue(firstRequest, secondRequest, thirdRequest, fourthRequest);
 
         // when
         trackManager.skip(3);
@@ -246,9 +229,6 @@ class TrackManagerTest {
         assertThat(trackManager.getQueue()).isEmpty();
 
         final var inOrder = inOrder(playInfoManager);
-        then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 0));
-        then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 1));
-        then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 2));
         then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 3));
         then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(fourthRequest, 0));
         then(playInfoManager).shouldHaveNoMoreInteractions();
@@ -277,8 +257,7 @@ class TrackManagerTest {
         // given
         final var firstRequest = testRequest();
         final var secondRequest = testRequest();
-        trackManager.queue(firstRequest);
-        trackManager.queue(secondRequest);
+        trackManager.queue(firstRequest, secondRequest);
 
         // when
         trackManager.stop();
@@ -288,7 +267,6 @@ class TrackManagerTest {
         assertThat(trackManager.getQueue().getFirst()).isEqualTo(secondRequest);
 
         final var inOrder = inOrder(playInfoManager);
-        then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 0));
         then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(firstRequest, 1));
         then(playInfoManager).should(inOrder).updatePlayInfo(new NowPlayingEmbed(secondRequest, 1, true));
         then(playInfoManager).shouldHaveNoMoreInteractions();
@@ -363,22 +341,4 @@ class TrackManagerTest {
         return new TrackRequest(new TestAudioTrack(), UUID.randomUUID().toString());
     }
 
-    static class TestAudioTrack extends BaseAudioTrack {
-
-        public TestAudioTrack() {
-            super(new AudioTrackInfo(
-                secure().nextAlphanumeric(20),
-                secure().nextAlphanumeric(20),
-                RANDOM.nextLong(100, 1000),
-                secure().nextAlphanumeric(20),
-                false,
-                secure().nextAlphanumeric(20)
-            ));
-        }
-
-        @Override
-        public void process(final LocalAudioTrackExecutor executor) {
-
-        }
-    }
 }

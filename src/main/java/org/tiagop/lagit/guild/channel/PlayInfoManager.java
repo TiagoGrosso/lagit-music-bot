@@ -17,7 +17,14 @@ public class PlayInfoManager {
     }
 
     public void updatePlayInfo(final NowPlayingEmbed embed) {
-        if (message == null) {
+        updatePlayInfo(embed, false);
+    }
+
+    public void updatePlayInfo(
+        final NowPlayingEmbed embed,
+        final boolean forceNewMessage
+    ) {
+        if (message == null || forceNewMessage) {
             channelManager.sendMessageEmbed(embed, message -> this.message = message);
             return;
         }

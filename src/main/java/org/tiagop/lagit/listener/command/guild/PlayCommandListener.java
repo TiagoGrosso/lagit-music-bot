@@ -75,9 +75,7 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
         event.deferReply().queue();
         final var loaded = audioPlayerManager.loadItemSync(query);
         switch (loaded) {
-            case AudioTrack track -> {
-                addSingleTrackToQueue(guild, track, channel, event);
-            }
+            case AudioTrack track -> addSingleTrackToQueue(guild, track, channel, event);
             case AudioPlaylist playlist -> {
                 if (playlist.isSearchResult()) {
                     addSingleTrackToQueue(guild, playlist.getTracks().getFirst(), channel, event);
@@ -96,9 +94,9 @@ public class PlayCommandListener extends AbstractGuildCommandListener<PlayComman
         final SlashCommandInteractionEvent event,
         final List<AudioTrack> tracks
     ) {
-        for (final var track : tracks) {
-            guildService.getTrackManager(guild).queue(new TrackRequest(track, event.getUser().getAsMention()));
-        }
+        final var requests = tracks.stream()
+            .map(track -> new TrackRequest(track, event.getUser().getAsMention())).toList();
+        guildService.getTrackManager(guild).queue(requests);
         guildService.getChannelManager(guild).joinChannel(channel);
         event.getHook()
             .sendMessage("Added '%s' to queue and %d others".formatted(
