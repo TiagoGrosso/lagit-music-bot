@@ -64,4 +64,8 @@ public class GuildService {
         final var guildContext = guildContexts.get(guildId);
         return guildContext == null ? null : guildContext.channelManager();
     }
+
+    public PlayInfoManager getPlayInfoManager(final Guild guild) {
+        return getGuildContext(guild).playInfoManager();
+    }
 }

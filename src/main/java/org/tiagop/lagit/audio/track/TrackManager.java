@@ -36,8 +36,14 @@ public class TrackManager extends AudioEventAdapter {
         this.trackQueue = new InMemoryTrackQueue();
     }
 
-    public void queue(final TrackRequest request) {
-        trackQueue.queue(request);
+    public void queue(final List<TrackRequest> requests) {
+        queue(requests.toArray(new TrackRequest[0]));
+    }
+
+    public void queue(final TrackRequest... requests) {
+        for (final var request : requests) {
+            trackQueue.queue(request);
+        }
         if (current == null) {
             playNext();
             return;

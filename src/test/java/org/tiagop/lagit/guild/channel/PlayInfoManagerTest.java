@@ -36,6 +36,28 @@ class PlayInfoManagerTest {
     }
 
     @Test
+    void updates_play_info_by_sending_new_message_when_force_new_message() {
+        // given
+        given(embed.toMessageEmbed()).willReturn(messageEmbed);
+        given(message.editMessageEmbeds(messageEmbed)).willReturn(messageEditAction);
+
+        // Simulate the first call that sets the message
+        doAnswer(invocation -> {
+            final Consumer<Message> callback = invocation.getArgument(1);
+            callback.accept(message);
+            return null;
+        }).when(channelManager).sendMessageEmbed(eq(embed), any());
+        playInfoManager.updatePlayInfo(embed);
+
+        // when
+        playInfoManager.updatePlayInfo(embed, true);
+
+        // then
+        then(channelManager).should(times(2)).sendMessageEmbed(eq(embed), any());
+        then(messageEditAction).shouldHaveNoInteractions();
+    }
+
+    @Test
     void updates_play_info_by_editing_existing_message() {
         // given
         given(embed.toMessageEmbed()).willReturn(messageEmbed);
