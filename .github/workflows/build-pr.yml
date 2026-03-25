@@ -69,7 +69,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Comment PR
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         with:
           header: pr-release
           recreate: true
