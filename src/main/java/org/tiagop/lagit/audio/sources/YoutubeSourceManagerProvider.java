@@ -4,11 +4,14 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import dev.lavalink.youtube.YoutubeSourceOptions;
-import dev.lavalink.youtube.clients.AndroidMusicWithThumbnail;
-import dev.lavalink.youtube.clients.ClientOptions;
-import dev.lavalink.youtube.clients.MusicWithThumbnail;
-import dev.lavalink.youtube.clients.WebEmbeddedWithThumbnail;
-import dev.lavalink.youtube.clients.WebWithThumbnail;
+import dev.lavalink.youtube.clients.Android;
+import dev.lavalink.youtube.clients.AndroidMusic;
+import dev.lavalink.youtube.clients.AndroidVr;
+import dev.lavalink.youtube.clients.MWeb;
+import dev.lavalink.youtube.clients.Music;
+import dev.lavalink.youtube.clients.TvHtml5Simply;
+import dev.lavalink.youtube.clients.Web;
+import dev.lavalink.youtube.clients.WebEmbedded;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -22,34 +25,15 @@ public class YoutubeSourceManagerProvider implements SourceManagerProvider {
             .setRemoteCipher("https://cipher.kikkia.dev/", null, null)
             .setAllowSearch(true);
 
-        final var androidMusicOptions = new ClientOptions();
-        androidMusicOptions.setPlayback(false);
-        androidMusicOptions.setPlaylistLoading(false);
-        androidMusicOptions.setSearching(false);
-        androidMusicOptions.setVideoLoading(true);
-
-        final var musicOptions = new ClientOptions();
-        musicOptions.setPlayback(false);
-        musicOptions.setPlaylistLoading(false);
-        musicOptions.setSearching(true);
-        musicOptions.setVideoLoading(false);
-
-        final var webOptions = new ClientOptions();
-        webOptions.setPlayback(false);
-        webOptions.setPlaylistLoading(true);
-        webOptions.setSearching(true);
-        webOptions.setVideoLoading(false);
-
-        final var webEmbedOptions = new ClientOptions();
-        webEmbedOptions.setPlayback(false);
-        webEmbedOptions.setPlaylistLoading(false);
-        webEmbedOptions.setSearching(false);
-        webEmbedOptions.setVideoLoading(false);
-
         return new YoutubeAudioSourceManager(options,
-            new AndroidMusicWithThumbnail(androidMusicOptions),
-            new MusicWithThumbnail(musicOptions),
-            new WebWithThumbnail(webOptions),
-            new WebEmbeddedWithThumbnail(webEmbedOptions));
+            new Android(),
+            new Music(),
+            new Web(),
+            new MWeb(),
+            new WebEmbedded(),
+            new AndroidMusic(),
+            new AndroidVr(),
+            new TvHtml5Simply()
+        );
     }
 }
