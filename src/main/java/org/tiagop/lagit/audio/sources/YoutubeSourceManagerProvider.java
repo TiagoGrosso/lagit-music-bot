@@ -5,7 +5,6 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import dev.lavalink.youtube.YoutubeSourceOptions;
 import dev.lavalink.youtube.clients.AndroidMusicWithThumbnail;
-import dev.lavalink.youtube.clients.AndroidVrWithThumbnail;
 import dev.lavalink.youtube.clients.ClientOptions;
 import dev.lavalink.youtube.clients.MusicWithThumbnail;
 import dev.lavalink.youtube.clients.WebEmbeddedWithThumbnail;
@@ -47,14 +46,10 @@ public class YoutubeSourceManagerProvider implements SourceManagerProvider {
         webEmbedOptions.setSearching(false);
         webEmbedOptions.setVideoLoading(false);
 
-        final var androidVr = new ClientOptions();
-        webEmbedOptions.setPlayback(true);
-        webEmbedOptions.setPlaylistLoading(true);
-        webEmbedOptions.setSearching(false);
-        webEmbedOptions.setVideoLoading(true);
-
-        return new YoutubeAudioSourceManager(options, new AndroidMusicWithThumbnail(androidMusicOptions),
-            new MusicWithThumbnail(musicOptions), new WebWithThumbnail(webOptions),
-            new WebEmbeddedWithThumbnail(webEmbedOptions), new AndroidVrWithThumbnail(androidVr));
+        return new YoutubeAudioSourceManager(options,
+            new AndroidMusicWithThumbnail(androidMusicOptions),
+            new MusicWithThumbnail(musicOptions),
+            new WebWithThumbnail(webOptions),
+            new WebEmbeddedWithThumbnail(webEmbedOptions));
     }
 }
