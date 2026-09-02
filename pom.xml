@@ -25,7 +25,7 @@
         <assertj-core.version>3.27.7</assertj-core.version>
         <mockito-core.version>5.23.0</mockito-core.version>
 
-        <compiler-plugin.version>3.15.0</compiler-plugin.version>
+        <compiler-plugin.version>3.16.0</compiler-plugin.version>
         <surefire-plugin.version>3.5.6</surefire-plugin.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
         <checkstyle.version>13.11.0</checkstyle.version>
