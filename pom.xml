@@ -17,7 +17,7 @@
 
         <jda.version>6.5.0</jda.version>
         <lavaplayer.version>2.2.7</lavaplayer.version>
-        <youtube-source.version>f45bbb7aebfcbc1c553769e04af6cd43afa8b7c3-SNAPSHOT</youtube-source.version>
+        <youtube-source.version>1.18.2</youtube-source.version>
         <commons-validator.version>1.11.0</commons-validator.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <jdave.version>0.1.8</jdave.version>
