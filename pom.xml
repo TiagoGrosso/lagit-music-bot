@@ -123,6 +123,10 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-health</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit</artifactId>
             <scope>test</scope>
         </dependency>
@@ -168,8 +172,7 @@
                         --add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
                         --add-opens jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED
                         --add-opens jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED
-                        --enable-native-access=ALL-UNNAMED
-                    </jvmArgs>
+                        --enable-native-access=ALL-UNNAMED</jvmArgs>
                 </configuration>
             </plugin>
             <plugin>
