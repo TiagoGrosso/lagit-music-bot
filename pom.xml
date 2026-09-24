@@ -23,7 +23,7 @@
         <jdave.version>0.1.8</jdave.version>
 
         <assertj-core.version>3.27.7</assertj-core.version>
-        <mockito-core.version>5.23.0</mockito-core.version>
+        <mockito-core.version>5.24.0</mockito-core.version>
 
         <compiler-plugin.version>3.16.0</compiler-plugin.version>
         <surefire-plugin.version>3.6.0</surefire-plugin.version>
