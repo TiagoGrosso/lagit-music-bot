@@ -8,6 +8,12 @@ opening a (non-draft) PR. It will run all the validations and tests that the CI 
 This project follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0) spec for commit messages.
 This is mandatory and enforced by a check that runs during Pull Requests.
 
+## Tests
+
+Unit tests are named `*Test` and run during the `test` phase. Integration tests and `@QuarkusTest` tests are
+named `*Spec` and run during the `verify` phase (via the Maven Failsafe plugin), so a plain `mvn test` will not run
+them. Run `./mvnw verify` (or a full `./mvnw clean install`, as the CI does) to execute both.
+
 ## Dev Mode
 
 > ![IMPORTANT]
