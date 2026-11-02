@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-guild-configs
+      author: tiagop
+      changes:
+        - createTable:
+            tableName: guild_configs
+            columns:
+              - column:
+                  name: guild_id
+                  type: varchar(20)
+                  constraints:
+                    primaryKey: true
+                    nullable: false

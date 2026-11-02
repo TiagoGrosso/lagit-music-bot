@@ -3,3 +3,5 @@ services:
     image: tiagopgrosso/lagit-music-bot
     restart: unless-stopped
     env_file: .env
+    volumes:
+      - ./data:/data

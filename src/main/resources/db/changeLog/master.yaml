@@ -1,0 +1,3 @@
+databaseChangeLog:
+  - include:
+      file: db/changeLog/001-guild-configs.yaml

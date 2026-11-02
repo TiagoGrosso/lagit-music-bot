@@ -9,9 +9,10 @@ information on how to get one.
 The simplest way to run the bot is with `docker run`:
 
 ```shell
-docker run -e DISCORD_TOKEN=<your discord token> 
-  -e SPOTIFY_CLIENT_ID=<your spotify client id> # If you don't want to use spotify, remove this line
-  -e SPOTIFY_CLIENT_SECRET=<your spotify client secret> # If you don't want to use spotify, remove this line
+docker run -e DISCORD_TOKEN=<your discord token> \
+  -v lagit-data:/data \
+  -e SPOTIFY_CLIENT_ID=<your spotify client id> # If you don't want to use spotify, remove this line \
+  -e SPOTIFY_CLIENT_SECRET=<your spotify client secret> # If you don't want to use spotify, remove this line \
   tiagopgrosso/lagit-music-bot
 ```
 
@@ -67,6 +68,63 @@ services:
 
 A simple `docker-compose.yml` file is also provided in the root of the repo with this latest option alongside an
 .env-example file which you can copy and rename to .env.
+
+# Database
+
+The bot stores its data (such as per-guild configuration) in an embedded [H2](https://h2database.com) database. By
+default it is a file at `/data/lagit.mv.db`, so when running in a container you must mount a volume at `/data`, as the
+examples above do, or your data will be lost when the container is recreated.
+
+If you would rather use [postgres](https://www.postgresql.org), set the following environment variables instead:
+
+```dotenv
+DB_KIND=postgresql
+DB_URL=jdbc:postgresql://<host>:5432/<database>
+DB_USERNAME=<username>
+DB_PASSWORD=<password>
+```
+
+No volume is needed in that case. The database schema is created and migrated automatically at startup, for both
+databases.
+
+If you're using docker compose and want postgres as an extra service, here's an example. Note the health check - the bot
+migrates the database on startup, so it must not start before postgres is ready to accept connections:
+
+```yml
+services:
+  bot:
+    image: tiagopgrosso/lagit-music-bot # optionally add ":X.Y.Z" for a specific version
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - DB_KIND=postgresql
+      - DB_URL=jdbc:postgresql://db:5432/lagit
+      - DB_USERNAME=lagit
+      - DB_PASSWORD=changeme
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=lagit
+      - POSTGRES_USER=lagit
+      - POSTGRES_PASSWORD=changeme
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U lagit -d lagit" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres-data:
+```
+
+If you use this setup, remember to remove the `./data:/data` volume from the bot service, it is no longer needed.
 
 # Advanced
 
