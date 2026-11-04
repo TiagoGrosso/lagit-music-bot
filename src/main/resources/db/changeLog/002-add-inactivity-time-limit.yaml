@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-add-inactivity-time-limit-to-guild-configs
+      author: tiagop
+      changes:
+        - addColumn:
+            tableName: guild_configs
+            columns:
+              - column:
+                  name: inactivity_time_limit_seconds
+                  type: bigint
+                  constraints:
+                    nullable: false
+                  defaultValue: 300

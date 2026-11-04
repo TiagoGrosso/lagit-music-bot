@@ -13,7 +13,7 @@ class GuildConfigServiceSpec {
     GuildConfigService guildConfigService;
 
     @Test
-    void itCreatesMissingGuildConfig() {
+    void it_creates_missing_guild_config() {
         // given
         final var guildId = "123456789012345678";
 
@@ -22,11 +22,13 @@ class GuildConfigServiceSpec {
 
         // then
         assertThat(guildConfig.guildId).isEqualTo(guildId);
+        assertThat(guildConfig.inactivityTimeLimitSeconds)
+            .isEqualTo(GuildConfigService.DEFAULT_INACTIVITY_TIME_LIMIT.toSeconds());
         assertThat(guildConfigService.find("guildId", guildId).count()).isEqualTo(1);
     }
 
     @Test
-    void itReusesExistingGuildConfig() {
+    void it_reuses_existing_guild_config() {
         // given
         final var guildId = "876543210987654321";
         guildConfigService.getOrCreate(guildId);

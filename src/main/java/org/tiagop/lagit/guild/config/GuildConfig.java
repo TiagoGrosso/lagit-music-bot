@@ -12,4 +12,7 @@ public class GuildConfig {
     @Id
     @Column(name = "guild_id", nullable = false)
     public String guildId;
+
+    @Column(name = "inactivity_time_limit_seconds", nullable = false)
+    public Long inactivityTimeLimitSeconds;
 }

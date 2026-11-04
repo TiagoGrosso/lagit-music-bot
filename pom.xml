@@ -148,6 +148,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-junit-mockito</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito-core.version}</version>
@@ -201,7 +206,9 @@
                         <arg>-XDcompilePolicy=simple</arg>
                         <arg>-XDaddTypeAnnotationsToSymbol=true</arg>
                         <arg>--should-stop=ifError=FLOW</arg>
-                        <arg>-Xplugin:ErrorProne -XepOpt:NullAway:AnnotatedPackages=org.tiagop -Xep:NullAway:ERROR</arg>
+                        <arg>-Xplugin:ErrorProne -XepOpt:NullAway:AnnotatedPackages=org.tiagop
+                            -XepOpt:NullAway:ExcludedFieldAnnotations=io.quarkus.test.junit.mockito.InjectSpy
+                            -Xep:NullAway:ERROR</arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
                         <path>
