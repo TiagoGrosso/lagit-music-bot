@@ -7,7 +7,7 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
-class GuildConfigServiceTest {
+class GuildConfigServiceSpec {
 
     @Inject
     GuildConfigService guildConfigService;
