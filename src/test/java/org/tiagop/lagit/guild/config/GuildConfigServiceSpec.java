@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import java.time.Duration;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
@@ -39,5 +40,18 @@ class GuildConfigServiceSpec {
         // then
         assertThat(guildConfig.guildId).isEqualTo(guildId);
         assertThat(guildConfigService.find("guildId", guildId).count()).isEqualTo(1);
+    }
+
+    @Test
+    void it_sets_the_inactivity_time_limit_of_a_guild() {
+        // given
+        final var guildId = "123450987654321098";
+        guildConfigService.getOrCreate(guildId);
+
+        // when
+        guildConfigService.setInactivityTimeLimit(guildId, Duration.ofMinutes(1).toSeconds());
+
+        // then
+        assertThat(guildConfigService.getOrCreate(guildId).inactivityTimeLimitSeconds).isEqualTo(60L);
     }
 }

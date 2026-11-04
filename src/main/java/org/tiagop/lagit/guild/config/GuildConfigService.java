@@ -22,4 +22,9 @@ public class GuildConfigService implements PanacheRepository<GuildConfig> {
                 return guildConfig;
             });
     }
+
+    @Transactional
+    public void setInactivityTimeLimit(final String guildId, final long inactivityTimeLimitSeconds) {
+        getOrCreate(guildId).inactivityTimeLimitSeconds = inactivityTimeLimitSeconds;
+    }
 }

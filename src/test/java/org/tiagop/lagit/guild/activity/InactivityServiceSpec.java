@@ -2,14 +2,12 @@ package org.tiagop.lagit.guild.activity;
 
 import static org.apache.commons.lang3.RandomStringUtils.secure;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import io.quarkus.narayana.jta.QuarkusTransaction;
 import io.quarkus.scheduler.ScheduledExecution;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectSpy;
@@ -55,7 +53,13 @@ class InactivityServiceSpec {
 
         // then
         verify(channelManager).leaveChannel();
-        verify(channelManager).sendMessageEmbed(any(LeaveChannelForInactivityEmbed.class));
+
+        final var embedCaptor = ArgumentCaptor.forClass(LeaveChannelForInactivityEmbed.class);
+        verify(channelManager).sendMessageEmbed(embedCaptor.capture());
+        final var publishedMessage = embedCaptor.getValue().toMessageEmbed();
+        assertThat(publishedMessage.getTitle()).isEqualTo("Leaving channel \uD83C\uDFC3");
+        assertThat(publishedMessage.getDescription()).isEqualTo("Leaving voice channel after 5 minutes of inactivity");
+
         verify(guildService, never()).getChannelManager(activeGuildId);
         assertThat(guildConfigService.getOrCreate(guildId).inactivityTimeLimitSeconds)
             .isEqualTo(GuildConfigService.DEFAULT_INACTIVITY_TIME_LIMIT.toSeconds());
@@ -68,10 +72,7 @@ class InactivityServiceSpec {
         final var defaultLimitGuildId = secure().nextAlphanumeric(20);
         final var now = Instant.now();
 
-        QuarkusTransaction.requiringNew().run(() -> {
-            final var guildConfig = guildConfigService.getOrCreate(shortLimitGuildId);
-            guildConfig.inactivityTimeLimitSeconds = Duration.ofMinutes(1).toSeconds();
-        });
+        guildConfigService.setInactivityTimeLimit(shortLimitGuildId, Duration.ofMinutes(1).toSeconds());
 
         inactivityService.registerGuildInactivity(shortLimitGuildId, now.minus(Duration.ofMinutes(4)));
         inactivityService.registerGuildInactivity(defaultLimitGuildId, now.minus(Duration.ofMinutes(4)));
@@ -89,6 +90,8 @@ class InactivityServiceSpec {
         verify(channelManager).leaveChannel();
         verify(channelManager).sendMessageEmbed(embedCaptor.capture());
         assertThat(embedCaptor.getValue().inactivityDuration()).isEqualTo(Duration.ofMinutes(1));
+        assertThat(embedCaptor.getValue().toMessageEmbed().getDescription())
+            .isEqualTo("Leaving voice channel after 1 minute of inactivity");
         verify(guildService, never()).getChannelManager(defaultLimitGuildId);
     }
 }
