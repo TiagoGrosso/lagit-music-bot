@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.interactions.commands.Command.Choice;
 import net.dv8tion.jda.api.requests.restaction.interactions.AutoCompleteCallbackAction;
 import org.junit.jupiter.api.Test;
 import org.tiagop.lagit.command.ConfigSetCommand;
-import org.tiagop.lagit.command.ConfigSetCommand.ConfigKey;
+import org.tiagop.lagit.guild.config.ConfigKey;
 
 class ConfigSetKeyAutocompleteListenerTest {
 

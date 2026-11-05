@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.tiagop.lagit.command.ConfigSetCommand;
+import org.tiagop.lagit.guild.config.ConfigKey;
 import org.tiagop.lagit.guild.config.GuildConfigService;
 
 class ConfigSetCommandListenerTest {
@@ -35,7 +36,7 @@ class ConfigSetCommandListenerTest {
     @Test
     void it_sets_the_inactivity_timeout_and_replies() {
         // given
-        final var data = new ConfigSetCommand.Data(ConfigSetCommand.ConfigKey.INACTIVITY_TIMEOUT.name(), "60");
+        final var data = new ConfigSetCommand.Data(ConfigKey.INACTIVITY_TIMEOUT.name(), "60");
 
         // when
         listener.handleCommand(event, data, guild);
@@ -50,7 +51,7 @@ class ConfigSetCommandListenerTest {
     @Test
     void it_replies_with_an_error_when_the_value_is_not_a_whole_number() {
         // given
-        final var data = new ConfigSetCommand.Data(ConfigSetCommand.ConfigKey.INACTIVITY_TIMEOUT.name(), "soon");
+        final var data = new ConfigSetCommand.Data(ConfigKey.INACTIVITY_TIMEOUT.name(), "soon");
 
         // when
         listener.handleCommand(event, data, guild);
@@ -63,7 +64,7 @@ class ConfigSetCommandListenerTest {
     @Test
     void it_replies_with_an_error_when_the_value_is_not_positive() {
         // given
-        final var key = ConfigSetCommand.ConfigKey.INACTIVITY_TIMEOUT.name();
+        final var key = ConfigKey.INACTIVITY_TIMEOUT.name();
         final var zeroData = new ConfigSetCommand.Data(key, "0");
         final var negativeData = new ConfigSetCommand.Data(key, "-5");
 
