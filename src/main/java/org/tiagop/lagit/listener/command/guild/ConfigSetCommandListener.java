@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.tiagop.lagit.command.ConfigSetCommand;
+import org.tiagop.lagit.guild.config.AnnounceMode;
 import org.tiagop.lagit.guild.config.ConfigKey;
 import org.tiagop.lagit.guild.config.GuildConfigService;
 
@@ -31,6 +32,7 @@ public class ConfigSetCommandListener extends AbstractGuildCommandListener<Confi
         // exhaustive switch expression so every new ConfigKey value forces an arm to be added here
         final String message = switch (key) {
             case INACTIVITY_TIMEOUT -> setInactivityTimeout(guild.getId(), data.value());
+            case ANNOUNCE_MODE -> setAnnounceMode(guild.getId(), data.value());
         };
         event.reply(message).setEphemeral(true).queue();
     }
@@ -47,5 +49,14 @@ public class ConfigSetCommandListener extends AbstractGuildCommandListener<Confi
         }
         guildConfigService.setInactivityTimeLimit(guildId, seconds);
         return "Inactivity timeout set to %d seconds".formatted(seconds);
+    }
+
+    private String setAnnounceMode(final String guildId, final String rawValue) {
+        final var announceMode = AnnounceMode.fromRaw(rawValue);
+        if (announceMode == null) {
+            return "Announce mode must be one of NEW_MESSAGE, EDIT_MESSAGE or SILENT, got '%s'".formatted(rawValue);
+        }
+        guildConfigService.setAnnounceMode(guildId, announceMode);
+        return "Announce mode set to %s".formatted(announceMode);
     }
 }

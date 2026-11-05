@@ -28,7 +28,8 @@ class ConfigGetKeyAutocompleteListenerTest {
 
         // then
         final var ignored = verify(event).replyChoices(List.of(
-            new Choice(ConfigKey.INACTIVITY_TIMEOUT.description, ConfigKey.INACTIVITY_TIMEOUT.name())
+            new Choice(ConfigKey.INACTIVITY_TIMEOUT.description, ConfigKey.INACTIVITY_TIMEOUT.name()),
+            new Choice(ConfigKey.ANNOUNCE_MODE.description, ConfigKey.ANNOUNCE_MODE.name())
         ));
         verify(callbackAction).queue();
     }
