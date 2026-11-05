@@ -15,8 +15,9 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.junit.jupiter.api.Test;
+import org.tiagop.lagit.command.ConfigOptions;
 import org.tiagop.lagit.command.ConfigSetCommand;
-import org.tiagop.lagit.command.ConfigSetCommand.ConfigKey;
+import org.tiagop.lagit.guild.config.ConfigKey;
 import org.tiagop.lagit.guild.config.GuildConfigService;
 
 @QuarkusTest
@@ -42,7 +43,7 @@ class ConfigSetCommandListenerSpec {
         given(event.getGuild()).willReturn(guild);
         given(guild.getAudioManager()).willReturn(audioManager);
         given(guild.getId()).willReturn(guildId);
-        given(event.getOption(ConfigSetCommand.CONFIG_KEY_OPTION.getName()).getAsString())
+        given(event.getOption(ConfigOptions.CONFIG_KEY.getName()).getAsString())
             .willReturn(ConfigKey.INACTIVITY_TIMEOUT.name());
         given(event.getOption(ConfigSetCommand.CONFIG_VALUE_OPTION.getName()).getAsString()).willReturn("60");
 
@@ -62,7 +63,7 @@ class ConfigSetCommandListenerSpec {
         given(event.getGuild()).willReturn(guild);
         given(guild.getAudioManager()).willReturn(audioManager);
         given(guild.getId()).willReturn(guildId);
-        given(event.getOption(ConfigSetCommand.CONFIG_KEY_OPTION.getName()).getAsString())
+        given(event.getOption(ConfigOptions.CONFIG_KEY.getName()).getAsString())
             .willReturn(ConfigKey.INACTIVITY_TIMEOUT.name());
         given(event.getOption(ConfigSetCommand.CONFIG_VALUE_OPTION.getName()).getAsString()).willReturn("soon");
 
@@ -83,7 +84,7 @@ class ConfigSetCommandListenerSpec {
         given(event.getGuild()).willReturn(guild);
         given(guild.getAudioManager()).willReturn(audioManager);
         given(guild.getId()).willReturn(guildId);
-        given(event.getOption(ConfigSetCommand.CONFIG_KEY_OPTION.getName()).getAsString()).willReturn("nope");
+        given(event.getOption(ConfigOptions.CONFIG_KEY.getName()).getAsString()).willReturn("nope");
         given(event.getOption(ConfigSetCommand.CONFIG_VALUE_OPTION.getName()).getAsString()).willReturn("60");
 
         // when

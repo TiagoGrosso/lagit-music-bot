@@ -3,9 +3,8 @@ package org.tiagop.lagit.listener.command.guild;
 import jakarta.enterprise.context.ApplicationScoped;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.jetbrains.annotations.Nullable;
 import org.tiagop.lagit.command.ConfigSetCommand;
-import org.tiagop.lagit.command.ConfigSetCommand.ConfigKey;
+import org.tiagop.lagit.guild.config.ConfigKey;
 import org.tiagop.lagit.guild.config.GuildConfigService;
 
 @ApplicationScoped
@@ -23,7 +22,7 @@ public class ConfigSetCommandListener extends AbstractGuildCommandListener<Confi
         final ConfigSetCommand.Data data,
         final Guild guild
     ) {
-        final var key = configKey(data.key());
+        final var key = ConfigKey.fromRaw(data.key());
         if (key == null) {
             event.reply("Unknown config key: %s".formatted(data.key())).setEphemeral(true).queue();
             return;
@@ -48,14 +47,5 @@ public class ConfigSetCommandListener extends AbstractGuildCommandListener<Confi
         }
         guildConfigService.setInactivityTimeLimit(guildId, seconds);
         return "Inactivity timeout set to %d seconds".formatted(seconds);
-    }
-
-    @Nullable
-    private ConfigKey configKey(final String raw) {
-        try {
-            return ConfigKey.valueOf(raw);
-        } catch (final IllegalArgumentException e) {
-            return null;
-        }
     }
 }

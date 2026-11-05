@@ -16,7 +16,7 @@ class ConfigSetCommandTest {
         // then
         assertThat(commandData.getOptions())
             .extracting(OptionData::getName)
-            .containsExactly(ConfigSetCommand.CONFIG_KEY_OPTION.getName(), ConfigSetCommand.CONFIG_VALUE_OPTION.getName());
+            .containsExactly(ConfigOptions.CONFIG_KEY.getName(), ConfigSetCommand.CONFIG_VALUE_OPTION.getName());
 
         final var keyOption = commandData.getOptions().get(0);
         assertThat(keyOption.isRequired()).isTrue();
