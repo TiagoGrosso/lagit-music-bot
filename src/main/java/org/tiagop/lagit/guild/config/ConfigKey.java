@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 
 public enum ConfigKey {
     INACTIVITY_TIMEOUT("Inactivity timeout (seconds)"),
+    ANNOUNCE_MODE("Announce mode (NEW_MESSAGE, EDIT_MESSAGE or SILENT)"),
     ;
 
     public final String description;

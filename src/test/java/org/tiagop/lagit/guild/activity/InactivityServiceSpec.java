@@ -2,6 +2,7 @@ package org.tiagop.lagit.guild.activity;
 
 import static org.apache.commons.lang3.RandomStringUtils.secure;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -19,6 +20,7 @@ import org.mockito.ArgumentCaptor;
 import org.tiagop.lagit.guild.GuildService;
 import org.tiagop.lagit.guild.channel.ChannelManager;
 import org.tiagop.lagit.guild.channel.embeds.LeaveChannelForInactivityEmbed;
+import org.tiagop.lagit.guild.config.AnnounceMode;
 import org.tiagop.lagit.guild.config.GuildConfigService;
 
 @QuarkusTest
@@ -93,5 +95,27 @@ class InactivityServiceSpec {
         assertThat(embedCaptor.getValue().toMessageEmbed().getDescription())
             .isEqualTo("Leaving voice channel after 1 minute of inactivity");
         verify(guildService, never()).getChannelManager(defaultLimitGuildId);
+    }
+
+    @Test
+    void it_does_not_announce_the_leave_in_silent_mode() {
+        // given
+        final var guildId = secure().nextAlphanumeric(20);
+        final var now = Instant.now();
+        guildConfigService.setAnnounceMode(guildId, AnnounceMode.SILENT);
+
+        inactivityService.registerGuildInactivity(guildId, now.minus(Duration.ofMinutes(10)));
+
+        final var channelManager = mock(ChannelManager.class);
+        doReturn(channelManager).when(guildService).getChannelManager(guildId);
+
+        final var scheduledExecution = mock(ScheduledExecution.class);
+        when(scheduledExecution.getFireTime()).thenReturn(now);
+        // when
+        inactivityService.leaveChannelForInactiveGuilds(scheduledExecution);
+
+        // then
+        verify(channelManager).leaveChannel();
+        verify(channelManager, never()).sendMessageEmbed(any(LeaveChannelForInactivityEmbed.class));
     }
 }

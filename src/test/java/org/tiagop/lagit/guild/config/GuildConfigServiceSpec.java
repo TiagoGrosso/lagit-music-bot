@@ -6,6 +6,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import java.time.Duration;
 import org.junit.jupiter.api.Test;
+import org.tiagop.lagit.guild.config.AnnounceMode;
 
 @QuarkusTest
 class GuildConfigServiceSpec {
@@ -25,6 +26,7 @@ class GuildConfigServiceSpec {
         assertThat(guildConfig.guildId).isEqualTo(guildId);
         assertThat(guildConfig.inactivityTimeLimitSeconds)
             .isEqualTo(GuildConfigService.DEFAULT_INACTIVITY_TIME_LIMIT.toSeconds());
+        assertThat(guildConfig.announceMode).isEqualTo(AnnounceMode.EDIT_MESSAGE);
         assertThat(guildConfigService.find("guildId", guildId).count()).isEqualTo(1);
     }
 
@@ -53,5 +55,18 @@ class GuildConfigServiceSpec {
 
         // then
         assertThat(guildConfigService.getOrCreate(guildId).inactivityTimeLimitSeconds).isEqualTo(60L);
+    }
+
+    @Test
+    void it_sets_the_announce_mode_of_a_guild() {
+        // given
+        final var guildId = "987650123456789012";
+        guildConfigService.getOrCreate(guildId);
+
+        // when
+        guildConfigService.setAnnounceMode(guildId, AnnounceMode.SILENT);
+
+        // then
+        assertThat(guildConfigService.getOrCreate(guildId).announceMode).isEqualTo(AnnounceMode.SILENT);
     }
 }

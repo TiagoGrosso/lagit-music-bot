@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changeLog/001-guild-configs.yaml
   - include:
       file: db/changeLog/002-add-inactivity-time-limit.yaml
+  - include:
+      file: db/changeLog/003-add-announce-mode.yaml

@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.tiagop.lagit.command.ConfigSetCommand;
+import org.tiagop.lagit.guild.config.AnnounceMode;
 import org.tiagop.lagit.guild.config.ConfigKey;
 import org.tiagop.lagit.guild.config.GuildConfigService;
 
@@ -75,6 +76,48 @@ class ConfigSetCommandListenerTest {
         // then
         final var ignoredZero = verify(event).reply("The inactivity timeout must be at least 1 second, got 0");
         final var ignoredNegative = verify(event).reply("The inactivity timeout must be at least 1 second, got -5");
+        verifyNoInteractions(guildConfigService);
+    }
+
+    @Test
+    void it_sets_the_announce_mode_and_replies() {
+        // given
+        final var data = new ConfigSetCommand.Data(ConfigKey.ANNOUNCE_MODE.name(), "NEW_MESSAGE");
+
+        // when
+        listener.handleCommand(event, data, guild);
+
+        // then
+        verify(guildConfigService).setAnnounceMode(GUILD_ID, AnnounceMode.NEW_MESSAGE);
+        final var ignored = verify(event).reply("Announce mode set to NEW_MESSAGE");
+        verify(replyAction).setEphemeral(true);
+        verify(replyAction).queue();
+    }
+
+    @Test
+    void it_sets_the_announce_mode_ignoring_case() {
+        // given
+        final var data = new ConfigSetCommand.Data(ConfigKey.ANNOUNCE_MODE.name(), "silent");
+
+        // when
+        listener.handleCommand(event, data, guild);
+
+        // then
+        verify(guildConfigService).setAnnounceMode(GUILD_ID, AnnounceMode.SILENT);
+        final var ignored = verify(event).reply("Announce mode set to SILENT");
+    }
+
+    @Test
+    void it_replies_with_an_error_when_the_announce_mode_value_is_invalid() {
+        // given
+        final var data = new ConfigSetCommand.Data(ConfigKey.ANNOUNCE_MODE.name(), "loud");
+
+        // when
+        listener.handleCommand(event, data, guild);
+
+        // then
+        final var ignored = verify(event)
+            .reply("Announce mode must be one of NEW_MESSAGE, EDIT_MESSAGE or SILENT, got 'loud'");
         verifyNoInteractions(guildConfigService);
     }
 

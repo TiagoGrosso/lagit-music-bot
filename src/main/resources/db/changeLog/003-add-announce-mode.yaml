@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-add-announce-mode-to-guild-configs
+      author: tiagop
+      changes:
+        - addColumn:
+            tableName: guild_configs
+            columns:
+              - column:
+                  name: announce_mode
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                  defaultValue: EDIT_MESSAGE
