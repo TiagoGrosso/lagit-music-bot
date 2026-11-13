@@ -78,7 +78,7 @@
 #   accessed directly. (example: "foo.example.com,bar.example.com")
 #
 ###
-FROM registry.access.redhat.com/ubi10/ubi:10.3-1793831871
+FROM registry.access.redhat.com/ubi10/ubi:10.3-1794519911
 USER root
 RUN dnf update -y && \
     dnf install -y java-25-openjdk && \
