@@ -14,6 +14,7 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.tuple.Pair;
 import org.tiagop.lagit.guild.GuildService;
 import org.tiagop.lagit.guild.channel.embeds.LeaveChannelForInactivityEmbed;
+import org.tiagop.lagit.guild.config.AnnounceMode;
 import org.tiagop.lagit.guild.config.GuildConfigService;
 
 @ApplicationScoped
@@ -58,11 +59,13 @@ public class InactivityService {
         }
 
         for (final var pair : pairs) {
-            final var inactivityTimeLimit = Duration.ofSeconds(
-                guildConfigService.getOrCreate(pair.getLeft()).inactivityTimeLimitSeconds
-            );
+            final var guildConfig = guildConfigService.getOrCreate(pair.getLeft());
             pair.getRight().leaveChannel();
-            pair.getRight().sendMessageEmbed(new LeaveChannelForInactivityEmbed(inactivityTimeLimit));
+            if (guildConfig.announceMode != AnnounceMode.SILENT) {
+                pair.getRight().sendMessageEmbed(
+                    new LeaveChannelForInactivityEmbed(Duration.ofSeconds(guildConfig.inactivityTimeLimitSeconds))
+                );
+            }
             clearGuildInactivity(pair.getLeft());
         }
     }

@@ -11,6 +11,7 @@ import org.tiagop.lagit.audio.track.TrackManager;
 import org.tiagop.lagit.guild.activity.InactivityService;
 import org.tiagop.lagit.guild.channel.ChannelManager;
 import org.tiagop.lagit.guild.channel.PlayInfoManager;
+import org.tiagop.lagit.guild.config.GuildConfigService;
 
 @ApplicationScoped
 public class GuildService {
@@ -19,13 +20,16 @@ public class GuildService {
 
     private final AudioPlayerManager playerManager;
     private final InactivityService inactivityService;
+    private final GuildConfigService guildConfigService;
 
     public GuildService(
         final AudioPlayerManager playerManager,
-        final InactivityService inactivityService
+        final InactivityService inactivityService,
+        final GuildConfigService guildConfigService
     ) {
         this.playerManager = playerManager;
         this.inactivityService = inactivityService;
+        this.guildConfigService = guildConfigService;
         this.guildContexts = new ConcurrentHashMap<>();
     }
 
@@ -37,7 +41,7 @@ public class GuildService {
                 guild.getAudioManager(),
                 new AudioPlayerSendHandler(audioPlayer)
             );
-            final var playInfoManager = new PlayInfoManager(channelManager);
+            final var playInfoManager = new PlayInfoManager(guild.getId(), guildConfigService, channelManager);
             return new GuildContext(
                 new TrackManager(
                     audioPlayer,

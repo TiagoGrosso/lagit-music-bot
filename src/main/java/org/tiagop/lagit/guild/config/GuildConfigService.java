@@ -18,6 +18,7 @@ public class GuildConfigService implements PanacheRepository<GuildConfig> {
                 final var guildConfig = new GuildConfig();
                 guildConfig.guildId = guildId;
                 guildConfig.inactivityTimeLimitSeconds = DEFAULT_INACTIVITY_TIME_LIMIT.toSeconds();
+                guildConfig.announceMode = AnnounceMode.EDIT_MESSAGE;
                 persist(guildConfig);
                 return guildConfig;
             });
@@ -26,5 +27,10 @@ public class GuildConfigService implements PanacheRepository<GuildConfig> {
     @Transactional
     public void setInactivityTimeLimit(final String guildId, final long inactivityTimeLimitSeconds) {
         getOrCreate(guildId).inactivityTimeLimitSeconds = inactivityTimeLimitSeconds;
+    }
+
+    @Transactional
+    public void setAnnounceMode(final String guildId, final AnnounceMode announceMode) {
+        getOrCreate(guildId).announceMode = announceMode;
     }
 }

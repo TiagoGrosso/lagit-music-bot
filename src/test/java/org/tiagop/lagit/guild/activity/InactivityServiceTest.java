@@ -16,6 +16,7 @@ import org.mockito.ArgumentCaptor;
 import org.tiagop.lagit.guild.GuildService;
 import org.tiagop.lagit.guild.channel.ChannelManager;
 import org.tiagop.lagit.guild.channel.embeds.LeaveChannelForInactivityEmbed;
+import org.tiagop.lagit.guild.config.AnnounceMode;
 import org.tiagop.lagit.guild.config.GuildConfig;
 import org.tiagop.lagit.guild.config.GuildConfigService;
 
@@ -88,9 +89,40 @@ class InactivityServiceTest {
         verify(guildService, never()).getChannelManager(longLimitGuild);
     }
 
+    @Test
+    void itDoesNotAnnounceLeavingWhenSilentModeIsOn() {
+        // given
+        final var silentGuild = secure().nextAlphanumeric(20);
+        final var now = Instant.now();
+
+        givenSilentGuild(silentGuild, Duration.ofMinutes(5));
+        inactivityService.registerGuildInactivity(silentGuild, now.minus(Duration.ofMinutes(10)));
+
+        final var silentGuildChannelManager = mock(ChannelManager.class);
+        when(guildService.getChannelManager(silentGuild)).thenReturn(silentGuildChannelManager);
+
+        final var scheduledExecution = mock(ScheduledExecution.class);
+        when(scheduledExecution.getFireTime()).thenReturn(now);
+        // when
+        inactivityService.leaveChannelForInactiveGuilds(scheduledExecution);
+
+        // then
+        verify(silentGuildChannelManager).leaveChannel();
+        verify(silentGuildChannelManager, never()).sendMessageEmbed(any(LeaveChannelForInactivityEmbed.class));
+    }
+
     private void givenGuildInactivityLimit(final String guildId, final Duration limit) {
+        givenGuildConfig(guildId, limit, AnnounceMode.EDIT_MESSAGE);
+    }
+
+    private void givenSilentGuild(final String guildId, final Duration limit) {
+        givenGuildConfig(guildId, limit, AnnounceMode.SILENT);
+    }
+
+    private void givenGuildConfig(final String guildId, final Duration limit, final AnnounceMode announceMode) {
         final var guildConfig = new GuildConfig();
         guildConfig.inactivityTimeLimitSeconds = limit.toSeconds();
+        guildConfig.announceMode = announceMode;
         when(guildConfigService.getOrCreate(guildId)).thenReturn(guildConfig);
     }
 }

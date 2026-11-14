@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.tiagop.lagit.command.ConfigGetCommand;
+import org.tiagop.lagit.guild.config.AnnounceMode;
 import org.tiagop.lagit.guild.config.ConfigKey;
 import org.tiagop.lagit.guild.config.GuildConfig;
 import org.tiagop.lagit.guild.config.GuildConfigService;
@@ -47,6 +48,23 @@ class ConfigGetCommandListenerTest {
 
         // then
         final var ignored = verify(event).reply("Inactivity timeout: 60 seconds");
+        verify(replyAction).setEphemeral(true);
+        verify(replyAction).queue();
+    }
+
+    @Test
+    void it_replies_with_the_announce_mode_value() {
+        // given
+        final var guildConfig = new GuildConfig();
+        guildConfig.announceMode = AnnounceMode.NEW_MESSAGE;
+        when(guildConfigService.getOrCreate(GUILD_ID)).thenReturn(guildConfig);
+        final var data = new ConfigGetCommand.Data(ConfigKey.ANNOUNCE_MODE.name());
+
+        // when
+        listener.handleCommand(event, data, guild);
+
+        // then
+        final var ignored = verify(event).reply("Announce mode: NEW_MESSAGE");
         verify(replyAction).setEphemeral(true);
         verify(replyAction).queue();
     }

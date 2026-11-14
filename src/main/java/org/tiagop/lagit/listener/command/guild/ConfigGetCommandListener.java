@@ -35,6 +35,7 @@ public class ConfigGetCommandListener extends AbstractGuildCommandListener<Confi
             case INACTIVITY_TIMEOUT -> "Inactivity timeout: %d seconds".formatted(
                 guildConfig.inactivityTimeLimitSeconds
             );
+            case ANNOUNCE_MODE -> "Announce mode: %s".formatted(guildConfig.announceMode);
         };
         event.reply(message).setEphemeral(true).queue();
     }
